@@ -12,7 +12,7 @@ class SM:
     def __init__(self, search_text, num_pics):
         self.text = search_text
         self.num = num_pics
-        self.urls_list=[]
+        self.urls_list = []
 
     def search_links(self):
         if self.num > self.max_num_page:
@@ -29,12 +29,13 @@ class SM:
 
         main_soup = html_tools.get_soup(main_page_html)
 
-        print('+ soup is hat :)')
+        print('+ soup is hot :)')
 
         a_links = main_soup.find_all('a', class_='serp-item__link')
 
         print('i have ({}) links:'.format(len(a_links)))
         urls = []
+        f=open('urls_list.txt','w')
         for a in a_links[:self.num]:
             s1 = a.attrs['href']  # находим атрибут с адресом
             s2 = s1.split('&pos=')[-2]  # отрезаем хвост
@@ -43,10 +44,12 @@ class SM:
                 s3, encoding='utf-8')  # раскодируем
             print('url: ', s4)
             urls.append(s4)
+            f.write(s4+'\n')
 
-        if len(urls)>0:
-            print('+ urls_list complete. len=: ', len(urls))
+        if len(urls) > 0:
+            print('+ urls_list complete. len=', len(urls))
+            print('+ urls_list save to \'urls_list.txt\'')
         else:
-            print ('- url list is empty!')
+            print('- url list is empty!')
 
-        self.urls_list=urls
+        self.urls_list = urls

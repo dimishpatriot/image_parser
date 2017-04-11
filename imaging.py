@@ -5,6 +5,11 @@ def welcome(version='0', repository='GitHub'):
     print(repository)
     print('=' * 78)
 
-def byebye():
+
+def bye_bye():
     print('Bye Bye! See you later ^)')
     print('=' * 78)
+
+
+def split_line():
+    print('-' * 78)
