@@ -1,5 +1,6 @@
-search_result
-__pycache__/
+/search_result
 .idea
-
-/urls_list.txt
+proxy_list.txt
+__pycache__/
+Будет удалено .gitignore
+Будет удалено dm_test.py
