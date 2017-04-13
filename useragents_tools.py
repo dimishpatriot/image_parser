@@ -1,4 +1,5 @@
 from random import choice
+import imaging_tools
 
 
 def get_useragent():
@@ -10,4 +11,7 @@ def get_useragent():
     except:
         useragent = None
         print('- you have not user-agent yet')
+
+    imaging_tools.split_line()  # ---
+
     return useragent

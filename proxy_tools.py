@@ -1,6 +1,7 @@
 from random import choice
 import useragents_tools
 import html_tools
+import imaging_tools
 
 
 def proxy_update(proxy):
@@ -23,6 +24,8 @@ def proxy_update(proxy):
         print('+ proxy list update - OK')
     else:
         print('- proxy list will old eat')
+
+    imaging_tools.split_line()  # ---
 
 
 def get_proxy():
