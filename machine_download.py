@@ -1,43 +1,80 @@
 import os
 import requests
+import file_tools
+import test_tools
+import multi_dwn
+import imaging_tools
 
 
 class DM:
-    def __init__(self, url_list, folder):
-        self.url_list = url_list
+    def __init__(self, folder, search_text, multi_dwn):
+        self.folder_to_save = os.getcwd() + folder  # полный путь
+        self.url_list = open(self.folder_to_save + '/urls_list.txt')
+        self.text = search_text
 
-        self.folder = os.getcwd() + folder  # полный путь
+        file_tools.make_dir(self.folder_to_save)  # проверяется и создается папка
+        print('+ your folder is \'{}\''.format(self.folder_to_save))
 
-        if not os.path.exists(self.folder):  # проверка на наличие
-            os.makedirs(self.folder)
+        if multi_dwn:
+            success_links, all_links = self.multi_way()
 
-        print('+ your folder is \'{}\''.format(self.folder))
+        else:
+            success_links, all_links = self.one_way()
 
-    def downloader(self):  # dwn pictures to ..?
+        imaging_tools.split_line()  # ---
+
+        print('all links: ', all_links)
+        print('success links: ', success_links)
+
+        imaging_tools.split_line()  # ---
+
+    def one_way(self):
         success = 0
-        for url in self.url_list:
-            n = self.url_list.index(url) + 1
-            pic_name = 'pic_' + str(n)
+        n = 1
 
-            file_ext = url.split('.')[-1]
+        for u in self.url_list:
+            file_name, url = file_tools.get_file_name(u, n, text=self.text)
+            if test_tools.link_is_pic(url):
+                print('file #{0} \'{1}\' now downloading'.format(n, file_name))
+                n += 1
 
-            file_name = pic_name + '.' + file_ext
+                try:
+                    r = requests.get(url, stream=True)
+                    if r.status_code == 200:
+                        with open(self.folder_to_save + '/' + file_name, 'bw') as f:
+                            for chunk in r.iter_content(102400):
+                                f.write(chunk)
+                        success += 1
 
-            print('file #{0} \'{1}\' now downloading'.format(n, file_name))
+                        print('- OK')
+                    else:
+                        print('- not available now')
+                except:
+                    print('- false!')
+            else:
+                print('-link is not picture!')
+                n += 1
+                continue
 
-            try:
+        return success, n  # возвращает число успешных исходов и общее число исходов (строк в файле)
 
-                r = requests.get(url, stream=True)
-                if r.status_code == 200:
-                    with open(self.folder + file_name, 'bw') as f:
-                        for chunk in r.iter_content(102400):
-                            f.write(chunk)
-                    success += 1
-                    print('- OK')
-                else:
-                    print('- not available now')
-            except:
-                print('- false!')
+    def multi_way(self):
+        success = 0  # TODO реализовать подсчет успешных исходов
+        n = 0
+        dwn = []
 
-        print('all links: ', len(self.url_list))
-        print('success download: ', success)
+        for u in self.url_list:
+            file_name, url = file_tools.get_file_name(u, n, text=self.text)
+
+            if test_tools.link_is_pic(url):
+                dwn.append(multi_dwn.MD(url, file_name, self.folder_to_save))
+                dwn[n].start()
+                n += 1
+            else:
+                print('- link is not picture!')
+                continue
+
+        for x in range(n):
+            dwn[x].join()  # завершение потоков
+
+        return success, n

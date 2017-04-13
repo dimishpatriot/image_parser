@@ -1,6 +1,3 @@
 /search_result
 .idea
 proxy_list.txt
-__pycache__/
-Будет удалено .gitignore
-Будет удалено dm_test.py

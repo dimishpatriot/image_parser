@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+from urllib.parse import quote, urlsplit, urlunsplit
 
 
 def get_html(url, proxy, user_agent):
@@ -17,3 +18,10 @@ def get_html(url, proxy, user_agent):
 
 def get_soup(html):
     return BeautifulSoup(html, 'lxml')
+
+
+def transform(iri):  # преобразует кириллицу в URI
+    parts = urlsplit(iri)
+    uri = urlunsplit((parts.scheme, parts.netloc.encode('idna').decode(
+        'ascii'), quote(parts.path), quote(parts.query, '='), quote(parts.fragment),))
+    return uri

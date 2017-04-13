@@ -1,18 +1,22 @@
+import os
 import urllib
 import html_tools
 import useragents_tools
 import proxy_tools
-import iri_to_uri
+import file_tools
 
 
 class SM:
     search_machine = 'https://yandex.ru/images/search?text='
     max_num_page = 100  # количество изображений на страницу выдачи
 
-    def __init__(self, search_text, num_pics):
-        self.text = search_text
+    def __init__(self, search_text, num_pics, folder):
+        self.search_text = search_text
         self.num = num_pics
         self.urls_list = []
+        self.folder_to_save = os.getcwd() + folder  # полный путь
+
+        file_tools.make_dir(self.folder_to_save)  # проверяется и создается папка
 
     def search_links(self):
         if self.num > self.max_num_page:
@@ -20,7 +24,7 @@ class SM:
         else:
             numdoc = self.num
 
-        search_url = iri_to_uri.transform(self.search_machine + self.text) + '&numdoc=' + str(numdoc)
+        search_url = html_tools.transform(self.search_machine + self.search_text) + '&numdoc=' + str(numdoc)
         print('search_url = ', search_url)
 
         proxy = proxy_tools.get_proxy()
@@ -35,7 +39,9 @@ class SM:
 
         print('i have ({}) links:'.format(len(a_links)))
         urls = []
-        f=open('urls_list.txt','w')
+
+        f = open(self.folder_to_save + 'urls_list.txt', 'w')
+
         for a in a_links[:self.num]:
             s1 = a.attrs['href']  # находим атрибут с адресом
             s2 = s1.split('&pos=')[-2]  # отрезаем хвост
@@ -44,11 +50,11 @@ class SM:
                 s3, encoding='utf-8')  # раскодируем
             print('url: ', s4)
             urls.append(s4)
-            f.write(s4+'\n')
+            f.write(s4 + '\n')
 
         if len(urls) > 0:
             print('+ urls_list complete. len=', len(urls))
-            print('+ urls_list save to \'urls_list.txt\'')
+            print('+ urls_list save to /search_result/' + self.search_text + '/urls_list.txt')
         else:
             print('- url list is empty!')
 
