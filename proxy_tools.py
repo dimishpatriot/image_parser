@@ -1,5 +1,3 @@
-import requests
-from bs4 import BeautifulSoup
 from random import choice
 import useragents_tools
 import html_tools
@@ -22,7 +20,7 @@ def proxy_update(proxy):
 
     if new_ip:
         save_proxy_list(new_ip)
-        print('+ proxy list updated')
+        print('+ proxy list update - OK')
     else:
         print('- proxy list will old eat')
 
@@ -31,7 +29,7 @@ def get_proxy():
     px_list = open('proxy_list.txt').read().split('\n')
 
     proxy = {'http': 'http://' + choice(px_list)}
-    print('+ fake proxy - OK: ', proxy)
+    print('+ make fake proxy - OK: ', proxy)
     proxy_update(proxy)
 
     return proxy
