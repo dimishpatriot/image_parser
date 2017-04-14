@@ -2,7 +2,7 @@ import os
 import requests
 import file_tools
 import test_tools
-import multi_dwn
+import download_multiplicator
 import imaging_tools
 
 
@@ -67,7 +67,7 @@ class DM:
             file_name, url = file_tools.get_file_name(u, n, text=self.text)
 
             if test_tools.link_is_pic(url):
-                dwn.append(multi_dwn.MD(url, file_name, self.folder_to_save))
+                dwn.append(download_multiplicator.MD(url, file_name, self.folder_to_save))
                 dwn[n].start()
                 n += 1
             else:

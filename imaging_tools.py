@@ -1,8 +1,8 @@
-def welcome(version='0', repository='GitHub'):
+def welcome(program_name, version, author, repository):
     print('=' * 78)
-    print('Welcome to ImageSearchDownloadMachine (ISDM) version {}'.format(version))
-    print('......')
-    print(repository)
+    print('Welcome to __{0}__, version {1}'.format(program_name, version))
+    print('Author: {}'.format(author))
+    print('Repository: {}'.format(repository))
     print('=' * 78)
 
 
