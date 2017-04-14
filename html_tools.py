@@ -22,6 +22,7 @@ def get_html(url, proxy, user_agent):
 def get_soup(html):
     return BeautifulSoup(html, 'lxml')
 
+
 def get_search_url(search_machine, search_text, numdoc, size=None, orient=None, type=None, color=None):
 
     url = transform_iri(search_machine + search_text) + \
@@ -44,39 +45,39 @@ def transform_iri(iri):  # при необходимости преобразу�
 
 def get_size_str(size):
     if size is None:  # формирование размера в строке запроса
-        str = None
+        st = ''
     else:
-        str = '&isize=' + size
-    return str
+        st = '&isize=' + size
+    return st
 
 
 def get_orient_str(orient):
     if orient is None:  # формирование ориентации в строке запроса
-        str = None
+        st = ''
     else:
-        str = '&iorient=' + orient
-    return str
+        st = '&iorient=' + orient
+    return st
 
 
 def get_type_str(type):
     if type is None:  # формирование типа в строке запроса
-        str = None
+        st = ''
     else:
-        str = '&type=' + type
-    return str
+        st = '&type=' + type
+    return st
 
 
 def get_color_str(color):
     if color is None:  # формирование цвета в строке запроса
-        str = None
+        st = ''
     else:
-        str = '&icolor=' + color
-    return str
+        st = '&icolor=' + color
+    return st
 
 
 def get_numdoc_str(numdoc):
     if numdoc is None:  # формирование цвета в строке запроса
-        str = None
+        st = ''
     else:
-        str = '&numdoc=' + numdoc
-    return str
+        st = '&numdoc=' + str(numdoc)
+    return st
