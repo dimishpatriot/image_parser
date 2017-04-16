@@ -11,7 +11,7 @@ class MD(Thread):
         self.success_flag = 0
 
     def run(self):
-        max_attempt = 1
+        max_attempt = 3
         attempt = 1
         while attempt <= max_attempt:
             try:
@@ -22,7 +22,7 @@ class MD(Thread):
                     with open(self.folder + '/' + self.file, 'bw') as f:
                         for chunk in r.iter_content(10240):
                             f.write(chunk)
-                    self.success_flag = 1
+                        self.success_flag = 1
                     print(self.file + ' - OK')
                     attempt = max_attempt + 1
 

@@ -1,7 +1,7 @@
 import os
 import requests
 import file_tools
-import check
+import check_tools
 import download_multiplicator
 import imaging_tools
 
@@ -30,13 +30,13 @@ class DM:
 
     def one_way(self):
         success = 0
-        n = 1
+        n_string = 1
 
         for u in self.url_list:
-            file_name, url = file_tools.get_file_name(u, n, text=self.text)
-            if check.link_is_pic(url):
-                print('file #{0} \'{1}\' now downloading'.format(n, file_name))
-                n += 1
+            file_name, url = file_tools.get_file_name(u, n_string, text=self.text)
+            if check_tools.link_is_pic(url):
+                print('file #{0} \'{1}\' now downloading'.format(n_string, file_name))
+                n_string += 1
 
                 try:
                     r = requests.get(url, stream=True)
@@ -53,28 +53,30 @@ class DM:
                     print('- false!')
             else:
                 print('-link is not picture!')
-                n += 1
+                n_string += 1
                 continue
 
-        return success, n  # возвращает число успешных исходов и общее число исходов (строк в файле)
+        return success, n_string  # возвращает число успешных исходов и общее число исходов (строк в файле)
 
     def multi_way(self):
         success = 0  # TODO реализовать подсчет успешных исходов
-        n = 0
+        n_process_start = 0
+        n_string = 0
         dwn = []
 
         for u in self.url_list:
-            file_name, url = file_tools.get_file_name(u, n, text=self.text)
+            n_string += 1
+            file_name, url = file_tools.get_file_name(u, n_process_start, text=self.text)
 
-            if check.link_is_pic(url):
+            if check_tools.link_is_pic(url):
                 dwn.append(download_multiplicator.MD(url, file_name, self.folder_to_save))
-                dwn[n].start()
-                n += 1
+                dwn[n_process_start].start()
+                n_process_start += 1
             else:
-                print('- link is not picture!')
                 continue
 
-        for x in range(n):
-            dwn[x].join()  # завершение потоков
+        for x in range(n_process_start):  # остановка только запущенных потоков
+            dwn[x].join()
+            success += dwn[x].success_flag  # завершение потоков
 
-        return success, n
+        return success, n_string

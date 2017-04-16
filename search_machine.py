@@ -13,14 +13,13 @@ class SM:
     def __init__(self, text, folder, num=10, size=None, color=None, type=None, orientation=None):
         self.search_text = text
         self.num = num
-        self.size=size
-        self.color=color
-        self.type=type
-        self.orientation=orientation
+        self.size = size
+        self.color = color
+        self.type = type
+        self.orientation = orientation
 
         self.urls_list = []
         self.folder_to_save = os.getcwd() + folder  # полный путь
-
 
         file_tools.make_dir(self.folder_to_save)  # проверяется и создается папка
 
@@ -30,7 +29,7 @@ class SM:
         else:
             numdoc = self.num
 
-        search_url=html_tools.get_search_url(
+        search_url = html_tools.get_search_url(
             search_machine=self.search_machine,
             search_text=self.search_text,
             numdoc=numdoc,
@@ -38,7 +37,7 @@ class SM:
             color=self.color,
             type=self.type,
             orient=self.orientation,
-            )
+        )
 
         print('search_url = ', search_url)
 
@@ -63,13 +62,14 @@ class SM:
             s1 = a.attrs['href']  # находим атрибут с адресом
             # TODO переделать
             if self.orientation:
-                s2=s2 = s1.split('&iorient=')[-2]  # отрезаем хвост (КОСТЫЛЬ!!!)
+                s2 = s1.split('&iorient=')[-2]  # отрезаем хвост (КОСТЫЛЬ!!!)
             else:
                 s2 = s1.split('&pos=')[-2]  # отрезаем хвост (КОСТЫЛЬ!!!)
 
             s3 = s2.split('img_url=')[-1]  # отрезаем голову
             s4 = urllib.parse.unquote_plus(
                 s3, encoding='utf-8')  # раскодируем
+
             print('url: ', s4)
             urls.append(s4)
             f.write(s4 + '\n')
