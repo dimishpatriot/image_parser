@@ -5,7 +5,7 @@ import program_data  # данные программы
 import imaging_tools  # красоты там :)
 import search_machine  # поисковая машина
 import download_machine  # машина для закачки
-import test_tools  # верификация ответов
+import check  # верификация ответов
 import file_tools  # работа с файлами
 import inquiry_tools  # работа с запросами
 
@@ -14,7 +14,7 @@ import inquiry_tools  # работа с запросами
 
 if __name__ == '__main__':
 
-    program=program_data.Program()
+    program = program_data.Program()
 
     imaging_tools.welcome(
         program_name=program.name,
@@ -22,31 +22,17 @@ if __name__ == '__main__':
         repository=program.rep,
         author=program.author)
 
-    # TODO добавить выбор простого запроса (только текст и 10 картинок на выходе) или сложного с параметрами
+    so = inquiry_tools.SearchObject()
 
-    print('First, answer 2 questions:')
-    search_text = input('1. What are you looking for? ')
+    search_text = so.text
 
-    while True:
-        n_pict = input('2. How many pictures you need? ')
-
-        if not test_tools.is_num(n_pict):
-            print('Input correct value!')
-        else:
-            break
-    num = int(n_pict)
-    # TODO добавить выбор размера картинок
-    # TODO добавить выбор типа картинок
-    # TODO добавить выбор цветовой гаммы
-    # TODO Добавить выбор ориентации
     imaging_tools.split_line()  # ---
 
-    folder_to_save = file_tools.folder_to_save(search_text)
+    folder_to_save = file_tools.folder_to_save(so.text)
 
-    my_search = search_machine.SM(
-        search_text=search_text,
-        num_pics=num,
-        folder=folder_to_save)  # инициализация поисковой машины
+    my_search = search_machine.SM(text=so.text,
+        folder=folder_to_save, num=so.quantity, size=so.size, color=so.gamma, type=so.type, orientation=so.orientation)  # инициализация поисковой машины
+
     my_search.search_links()
 
     imaging_tools.split_line()  # ---
@@ -54,8 +40,8 @@ if __name__ == '__main__':
     if len(my_search.urls_list) > 0:
         print('And now, answer 2 questions more:')
 
-        if test_tools.yes_or_no(input('3. Would you like to download the links found? (Y/N) ')):
-            if test_tools.yes_or_no(input('4. Would you like try multi-threading-download? (Y/N) ')):
+        if check.yes_or_no(input('3. Would you like to download the links found? (Y/N) ')):
+            if check.yes_or_no(input('4. Would you like try multi-threading-download? (Y/N) ')):
                 multi = 1
             else:
                 multi = 0

@@ -10,12 +10,17 @@ class SM:
     search_machine = 'https://yandex.ru/images/search?text='
     max_num_page = 100  # количество изображений на страницу выдачи
 
-    def __init__(self, search_text, num_pics, folder, search_size=None):
-        self.search_text = search_text
-        self.num = num_pics
+    def __init__(self, text, folder, num=10, size=None, color=None, type=None, orientation=None):
+        self.search_text = text
+        self.num = num
+        self.size=size
+        self.color=color
+        self.type=type
+        self.orientation=orientation
+
         self.urls_list = []
         self.folder_to_save = os.getcwd() + folder  # полный путь
-        self.search_size=search_size
+
 
         file_tools.make_dir(self.folder_to_save)  # проверяется и создается папка
 
@@ -29,7 +34,11 @@ class SM:
             search_machine=self.search_machine,
             search_text=self.search_text,
             numdoc=numdoc,
-            size=self.search_size)
+            size=self.size,
+            color=self.color,
+            type=self.type,
+            orient=self.orientation,
+            )
 
         print('search_url = ', search_url)
 
@@ -52,7 +61,12 @@ class SM:
 
         for a in a_links[:self.num]:
             s1 = a.attrs['href']  # находим атрибут с адресом
-            s2 = s1.split('&pos=')[-2]  # отрезаем хвост
+            # TODO переделать
+            if self.orientation:
+                s2=s2 = s1.split('&iorient=')[-2]  # отрезаем хвост (КОСТЫЛЬ!!!)
+            else:
+                s2 = s1.split('&pos=')[-2]  # отрезаем хвост (КОСТЫЛЬ!!!)
+
             s3 = s2.split('img_url=')[-1]  # отрезаем голову
             s4 = urllib.parse.unquote_plus(
                 s3, encoding='utf-8')  # раскодируем

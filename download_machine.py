@@ -1,7 +1,7 @@
 import os
 import requests
 import file_tools
-import test_tools
+import check
 import download_multiplicator
 import imaging_tools
 
@@ -34,7 +34,7 @@ class DM:
 
         for u in self.url_list:
             file_name, url = file_tools.get_file_name(u, n, text=self.text)
-            if test_tools.link_is_pic(url):
+            if check.link_is_pic(url):
                 print('file #{0} \'{1}\' now downloading'.format(n, file_name))
                 n += 1
 
@@ -66,7 +66,7 @@ class DM:
         for u in self.url_list:
             file_name, url = file_tools.get_file_name(u, n, text=self.text)
 
-            if test_tools.link_is_pic(url):
+            if check.link_is_pic(url):
                 dwn.append(download_multiplicator.MD(url, file_name, self.folder_to_save))
                 dwn[n].start()
                 n += 1
