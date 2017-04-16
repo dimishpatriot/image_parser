@@ -15,7 +15,7 @@ def make_dir(folder):
         os.makedirs(folder)
 
 
-def folder_to_save(search_text):
+def get_folder_name(search_text):
     folder = '/search_result/' + '_'.join(search_text.split(' ')) + '/'  # имя папки для сохранения
 
     return folder

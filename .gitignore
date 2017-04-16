@@ -1,7 +1,9 @@
-/search_result
-.idea
-proxy_list.txt
+*~
+search_result/
+/.idea
+tests/
+__pycache__/
+venv/
+build/
 
-Будет удалено __pycache__/
-/test/
-Будет удалено test/
+proxy_list.txt
