@@ -23,3 +23,4 @@ def link_is_pic(link):
     ans = (ext_dict.count(ext) > 0)
 
     return ans
+

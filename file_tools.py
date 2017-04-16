@@ -3,7 +3,7 @@ import os
 
 def get_file_name(url, num, text):
     new_url = url.rstrip()  # убрать символ окончания строки
-    pic_name = text + '_' + str(num)
+    pic_name = text + '_' + str(num).zfill(2)
     file_ext = new_url.split('.')[-1]
     file_name = pic_name + '.' + file_ext
 

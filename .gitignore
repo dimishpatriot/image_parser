@@ -1,3 +1,7 @@
 /search_result
 .idea
 proxy_list.txt
+
+Будет удалено __pycache__/
+/test/
+Будет удалено test/

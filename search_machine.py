@@ -10,9 +10,14 @@ class SM:
     search_machine = 'https://yandex.ru/images/search?text='
     max_num_page = 100  # количество изображений на страницу выдачи
 
-    def __init__(self, search_text, num_pics, folder):
-        self.search_text = search_text
-        self.num = num_pics
+    def __init__(self, text, folder, num=10, size=None, color=None, type=None, orientation=None):
+        self.search_text = text
+        self.num = num
+        self.size = size
+        self.color = color
+        self.type = type
+        self.orientation = orientation
+
         self.urls_list = []
         self.folder_to_save = os.getcwd() + folder  # полный путь
 
@@ -24,7 +29,16 @@ class SM:
         else:
             numdoc = self.num
 
-        search_url = html_tools.transform(self.search_machine + self.search_text) + '&numdoc=' + str(numdoc)
+        search_url = html_tools.get_search_url(
+            search_machine=self.search_machine,
+            search_text=self.search_text,
+            numdoc=numdoc,
+            size=self.size,
+            color=self.color,
+            type=self.type,
+            orient=self.orientation,
+        )
+
         print('search_url = ', search_url)
 
         proxy = proxy_tools.get_proxy()
@@ -35,7 +49,9 @@ class SM:
 
         print('+ soup is hot :)')
 
-        a_links = main_soup.find_all('a', class_='serp-item__link')
+        a_links = main_soup.find_all(
+            'a',
+            class_='serp-item__link')
 
         print('i have ({}) links:'.format(len(a_links)))
         urls = []
@@ -44,10 +60,16 @@ class SM:
 
         for a in a_links[:self.num]:
             s1 = a.attrs['href']  # находим атрибут с адресом
-            s2 = s1.split('&pos=')[-2]  # отрезаем хвост
+            # TODO переделать
+            if self.orientation:
+                s2 = s1.split('&iorient=')[-2]  # отрезаем хвост (КОСТЫЛЬ!!!)
+            else:
+                s2 = s1.split('&pos=')[-2]  # отрезаем хвост (КОСТЫЛЬ!!!)
+
             s3 = s2.split('img_url=')[-1]  # отрезаем голову
             s4 = urllib.parse.unquote_plus(
                 s3, encoding='utf-8')  # раскодируем
+
             print('url: ', s4)
             urls.append(s4)
             f.write(s4 + '\n')
