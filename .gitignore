@@ -1,9 +1,6 @@
-*~
-search_result/
-/.idea
-tests/
-__pycache__/
-venv/
 build/
+tests/
+search_result/
+
 
 proxy_list.txt
