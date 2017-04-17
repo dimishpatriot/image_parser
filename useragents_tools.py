@@ -1,8 +1,13 @@
 from random import choice
+
 import imaging_tools
 
 
 def get_useragent():
+    """
+    получение случайного Useragent из файла
+    :return: 
+    """
     try:
         ua_list = open('useragents_list.txt').read().split('\n')
 

@@ -1,11 +1,11 @@
 import urllib
 
-import check_tools
 import html_tools
-import inquiry
+import imaging_tools
+import search_main
 
 
-class YandexSearch(inquiry.Search):
+class YandexSearch(search_main.Search):
     search_types = {0: 'Select type of search:',
                     1: 'Simple search. Only text string input. Output - 10 pics',
                     2: 'Extend search. Input text, quantity, size',
@@ -43,11 +43,9 @@ class YandexSearch(inquiry.Search):
         self.type = None
         self.gamma = None
         self.orientation = None
+        self.machine = search_main.Search.search_machines[1]  # 1 - яндекс-поиск
 
-        self.search_type = self.cons_menu(self.search_types)  # выбор типа поиска
-
-        if check_tools.is_num(self.search_type):
-            search_type = int(self.search_type)
+        self.search_type = imaging_tools.cons_menu(self.search_types)  # выбор типа поиска
 
         self.q_search_text()  # есть во всех вариантах
 
@@ -67,7 +65,7 @@ class YandexSearch(inquiry.Search):
             self.orientation = self.get_answer(self.orient_types)
 
     def get_answer(self, types):
-        key = self.cons_menu(types)
+        key = imaging_tools.cons_menu(types)
         output = types[key]
         return output
 
