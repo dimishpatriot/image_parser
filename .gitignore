@@ -1,3 +1,6 @@
-/search_result
-.idea
+build/
+tests/
+search_result/
+
+
 proxy_list.txt

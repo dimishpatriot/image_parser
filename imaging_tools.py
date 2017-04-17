@@ -1,8 +1,8 @@
-def welcome(program_name, version, author, repository):
+def welcome(program_data):
     print('=' * 78)
-    print('Welcome to __{0}__, version {1}'.format(program_name, version))
-    print('Author: {}'.format(author))
-    print('Repository: {}'.format(repository))
+    print('Welcome to __{0}__, version {1}'.format(program_data.name, program_data.version))
+    print('Author: {}'.format(program_data.author))
+    print('Repository: {}'.format(program_data.rep))
     print('=' * 78)
 
 
