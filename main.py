@@ -1,16 +1,24 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
+import os
 
-import check_tools  # верификация ответов
-import download_machine  # машина для закачки
-import file_tools
-import imaging_tools  # красоты там :)
-import program_data  # данные программы
-import proxy_tools
-import search_by_google
-import search_by_yandex
-import search_main  # работа с запросами
-import useragents_tools
+from tools import file_tools
+from searching import search_by_google
+from searching import search_by_yandex
+from tools import useragents_tools
+
+from downloading import download_machine
+from searching import search_main
+from tools import imaging_tools, proxy_tools, check_tools
+
+
+class Program:
+    def __init__(self):
+        self.name = 'ImageSearchDownloadMachine (ISDM)'
+        self.version = '0.1.1'
+        self.author = 'dimishpatriot'
+        self.rep = 'https://github.com/dimishpatriot/img_pars.git'
+        self.path = os.getcwd()
 
 
 def search_start(obj):
@@ -18,19 +26,18 @@ def search_start(obj):
     запуск поисковой машины
     :param obj: объект поиска класса YandexSearch или иного
     """
-    folder_to = file_tools.get_folder_name(obj.text)  # полный путь
+    folder_to = file_tools.get_result_folder_name(obj)  # полный путь
     file_tools.make_dir(folder_to)  # проверяется и создается папка
 
-    new_proxy = proxy_tools.get_proxy()  # подмена прокси
+    new_proxy = proxy_tools.get_proxy(obj.path)  # подмена прокси
 
-    new_user_agent = useragents_tools.get_useragent()  # подмена useragent
+    new_user_agent = useragents_tools.get_useragent(obj.path)  # подмена useragent
 
     if obj.machine == obj.search_machines[1]:  # пока реализован только яндекс-поиск
         search_by_yandex.YandexSearch.html_yandex(
             obj,
             proxy=new_proxy,
-            user_agent=new_user_agent,
-            folder_to_save=folder_to)
+            user_agent=new_user_agent)
 
     elif obj.machine == obj.search_machines[2]:  # зарезервировано по гугл
         pass
@@ -53,7 +60,7 @@ def download_start(obj):
 
         imaging_tools.split_line()  # ---
 
-        dm = download_machine.DM(search_text=obj.text)  # инициализация машины для скачивания и запуск скачивания
+        dm = download_machine.DM(obj)  # инициализация машины для скачивания и запуск скачивания
 
         if multi:
             dm.multi_way()
@@ -72,15 +79,18 @@ def download_start(obj):
 # START
 if __name__ == '__main__':
 
-    imaging_tools.welcome(program_data.Program())  # вступление
+    pr = Program()
 
-    sm = search_main.Search().machine_num  # выбор машины для поиска
-    if sm == 1:
-        s_object = search_by_yandex.YandexSearch()
+    imaging_tools.welcome(pr)  # вступление
+
+    sm = search_main.Search(pr)
+
+    if sm.machine_num == 1:
+        s_object = search_by_yandex.YandexSearch(sm.path)
         search_start(s_object)  # инициализация поисковой машины
-    if sm == 2:
-        s_object = search_by_google.GoogleSearch()
-    if sm == 3:
+    if sm.machine_num == 2:
+        s_object = search_by_google.GoogleSearch(sm.path)
+    if sm.machine_num == 3:
         pass
 
     imaging_tools.split_line()  # ---

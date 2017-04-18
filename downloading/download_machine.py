@@ -1,16 +1,15 @@
 import requests
 
-import check_tools
-import download_multiplicator
-import file_tools
+from downloading import download_multiplicator
+from tools import file_tools, check_tools
 
 
 class DM:
-    def __init__(self, search_text):
-        self.folder_to_save = file_tools.get_folder_name(search_text)  # полный путь
+    def __init__(self, obj):
+        self.folder_to_save = file_tools.get_result_folder_name(obj)  # полный путь
         self.url_list = open((self.folder_to_save + 'urls_list.txt'), 'r')  # список ссылок для скачивнаия
 
-        self.text = search_text
+        self.text = obj.text
 
         file_tools.make_dir(self.folder_to_save)  # проверяется и создается папка
         print('+ your folder is \'{}\''.format(self.folder_to_save))

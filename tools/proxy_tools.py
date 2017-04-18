@@ -1,18 +1,18 @@
 from random import choice
 
-import html_tools
-import imaging_tools
-import useragents_tools
+from tools import html_tools
+from tools import useragents_tools
+from tools import imaging_tools
 
 
-def proxy_update(proxy):
+def proxy_update(proxy, main_path):
     """
     обновление листа прокси
     :param proxy: старый прокси
     """
     print('try to update px-list....')
 
-    useragent = useragents_tools.get_useragent()
+    useragent = useragents_tools.get_useragent(main_path)
 
     new_ip = []
     url = 'https://hidemy.name/ru/proxy-list/?ports=80&type=h&anon=34#list'
@@ -26,7 +26,7 @@ def proxy_update(proxy):
         new_ip.append(i.text + ':80')
 
     if new_ip:
-        save_proxy_list(new_ip)
+        save_proxy_list(new_ip, main_path)
         print('+ proxy list update - OK')
     else:
         print('- proxy list will old eat')
@@ -34,27 +34,27 @@ def proxy_update(proxy):
     imaging_tools.split_line()  # ---
 
 
-def get_proxy():
+def get_proxy(path):
     """
     получение прокси из proxy_list.txt
     :return: новый прокси
     """
-    px_list = open('proxy_list.txt').read().split('\n')
+    px_list = open(path+'/lists/proxy_list.txt').read().split('\n')
 
     proxy = {'http': 'http://' + choice(px_list)}
     print('+ make fake proxy - OK: ', proxy)
-    proxy_update(proxy)
+    proxy_update(proxy, path)
 
     return proxy
 
 
-def save_proxy_list(new_proxy_list):
+def save_proxy_list(new_proxy_list, path):
     """
     обновление/запись proxy_list.txt
     :param new_proxy_list: 
     :return: 
     """
-    f = open('proxy_list.txt', 'w')
+    f = open(path+'/lists/proxy_list.txt', 'w')
     for x in new_proxy_list:
         f.write(x+'\n')
     f.close()

@@ -1,6 +1,4 @@
-build/
-tests/
 search_result/
+lists/proxy_list.txt
 
-
-proxy_list.txt
+/.idea/

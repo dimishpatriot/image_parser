@@ -1,8 +1,9 @@
 import urllib
 
-import html_tools
-import imaging_tools
-import search_main
+from tools import html_tools
+
+from searching import search_main
+from tools import imaging_tools
 
 
 class YandexSearch(search_main.Search):
@@ -38,7 +39,8 @@ class YandexSearch(search_main.Search):
                   5: 'demotivator'}
     maximum_pics = 100
 
-    def __init__(self):
+    def __init__(self, path):
+        self.path = path
         self.size = None
         self.type = None
         self.gamma = None
@@ -51,7 +53,6 @@ class YandexSearch(search_main.Search):
 
         if self.search_type == 1:
             self.quantity = 10
-
 
         elif self.search_type == 2:
             self.q_quantity(maximum=self.maximum_pics)
@@ -69,7 +70,7 @@ class YandexSearch(search_main.Search):
         output = types[key]
         return output
 
-    def html_yandex(self, proxy, user_agent, folder_to_save):
+    def html_yandex(self, proxy, user_agent):
         """
         поисковый механизм Яндекса
         максимальная выдача без манипуляций ~100 картинок
@@ -104,7 +105,11 @@ class YandexSearch(search_main.Search):
         print('i have ({}) links:'.format(len(a_links)))
         urls = []
 
-        f = open(folder_to_save + 'urls_list.txt', 'w')  # открытые файла на запись, имя - согласно запроса
+        f = open(self.path + \
+                 '/search_result/' + \
+                 '_'.join(self.text.split(' ')) + \
+                 '/urls_list.txt',
+                 'w')  # открытые файла на запись, имя - согласно запроса
 
         for a in a_links[:self.quantity]:
             s1 = a.attrs['href']  # находим атрибут с адресом
