@@ -1,4 +1,4 @@
-import search_main
+from searching import search_main
 
 
 class GoogleSearch(search_main.Search):
@@ -9,7 +9,7 @@ class GoogleSearch(search_main.Search):
     type_types = {}
     maximum_pics = 100
 
-    def __init__(self):
+    def __init__(self, path):
         pass
 
     def html_google(self):

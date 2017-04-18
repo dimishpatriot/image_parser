@@ -1,5 +1,4 @@
-import check_tools
-import imaging_tools
+from tools import imaging_tools, check_tools
 
 
 class Search:
@@ -7,8 +6,9 @@ class Search:
                        1: 'Yandex.ru',
                        2: 'Google.com (not realised yet :)'}
 
-    def __init__(self):
+    def __init__(self, program):
         self.machine_num = imaging_tools.cons_menu(self.search_machines)  # выбор поискового механизма
+        self.path = program.path
 
     def q_search_text(self):
         print('Write, what you are looking for')

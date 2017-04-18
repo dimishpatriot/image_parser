@@ -17,17 +17,17 @@ def get_file_name(url, num, text):
 
 def make_dir(folder):
     """
-    создание рабочей директории
+    создание рабочей директории для сохранения результатов
     :param folder: папка
     """
     if not os.path.exists(folder):  # проверка на наличие папки
         os.makedirs(folder)  # создание папки
+        pass
 
 
-def get_folder_name(search_text):
+def get_result_folder_name(obj):
     """
     получение имени папки с учетом текущего местоположения
-    :param search_text: поисковый запрос
     :return: имя папки
     """
-    return os.getcwd() + '/search_result/' + '_'.join(search_text.split(' ')) + '/'  # имя папки для сохранения
+    return obj.path + '/search_result/' + '_'.join(obj.text.split(' ')) + '/'  # имя папки для сохранения
