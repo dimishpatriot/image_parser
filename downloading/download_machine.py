@@ -1,34 +1,23 @@
-import os
 import requests
-import file_tools
-import check_tools
-import download_multiplicator
-import imaging_tools
+
+from downloading import download_multiplicator
+from tools import file_tools, check_tools
 
 
 class DM:
-    def __init__(self, folder, search_text, multi_dwn):
-        self.folder_to_save = os.getcwd() + folder  # полный путь
-        self.url_list = open(self.folder_to_save + '/urls_list.txt')
-        self.text = search_text
+    def __init__(self, obj):
+        self.folder_to_save = file_tools.get_result_folder_name(obj)  # полный путь
+        self.url_list = open((self.folder_to_save + 'urls_list.txt'), 'r')  # список ссылок для скачивнаия
+
+        self.text = obj.text
 
         file_tools.make_dir(self.folder_to_save)  # проверяется и создается папка
         print('+ your folder is \'{}\''.format(self.folder_to_save))
 
-        if multi_dwn:
-            success_links, all_links = self.multi_way()
-
-        else:
-            success_links, all_links = self.one_way()
-
-        imaging_tools.split_line()  # ---
-
-        print('all links: ', all_links)
-        print('success links: ', success_links)
-
-        imaging_tools.split_line()  # ---
-
     def one_way(self):
+        """
+        однопоточная закачка
+        """
         success = 0
         n_string = 1
 
@@ -56,17 +45,23 @@ class DM:
                 n_string += 1
                 continue
 
-        return success, n_string  # возвращает число успешных исходов и общее число исходов (строк в файле)
+        self.all_links = n_string
+        self.success_links = success
 
     def multi_way(self):
-        success = 0  # TODO реализовать подсчет успешных исходов
+        """
+        мультипоточная закачка
+        :return: успешность, количество строк
+        """
+        success = 0
         n_process_start = 0
         n_string = 0
         dwn = []
 
         for u in self.url_list:
             n_string += 1
-            file_name, url = file_tools.get_file_name(u, n_process_start, text=self.text)
+            url = u.rstrip()  # удаление символа конца строки в строке файла
+            file_name = file_tools.get_file_name(url, n_process_start, text=self.text)
 
             if check_tools.link_is_pic(url):
                 dwn.append(download_multiplicator.MD(url, file_name, self.folder_to_save))
@@ -79,4 +74,5 @@ class DM:
             dwn[x].join()
             success += dwn[x].success_flag  # завершение потоков
 
-        return success, n_string
+        self.all_links = n_string
+        self.success_links = success

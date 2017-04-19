@@ -1,11 +1,12 @@
 import urllib
 
-import check_tools
-import html_tools
-import inquiry
+from tools import html_tools
+
+from searching import search_main
+from tools import imaging_tools
 
 
-class YandexSearch(inquiry.Search):
+class YandexSearch(search_main.Search):
     search_types = {0: 'Select type of search:',
                     1: 'Simple search. Only text string input. Output - 10 pics',
                     2: 'Extend search. Input text, quantity, size',
@@ -38,22 +39,20 @@ class YandexSearch(inquiry.Search):
                   5: 'demotivator'}
     maximum_pics = 100
 
-    def __init__(self):
+    def __init__(self, path):
+        self.path = path
         self.size = None
         self.type = None
         self.gamma = None
         self.orientation = None
+        self.machine = search_main.Search.search_machines[1]  # 1 - яндекс-поиск
 
-        self.search_type = self.cons_menu(self.search_types)  # выбор типа поиска
-
-        if check_tools.is_num(self.search_type):
-            search_type = int(self.search_type)
+        self.search_type = imaging_tools.cons_menu(self.search_types)  # выбор типа поиска
 
         self.q_search_text()  # есть во всех вариантах
 
         if self.search_type == 1:
             self.quantity = 10
-
 
         elif self.search_type == 2:
             self.q_quantity(maximum=self.maximum_pics)
@@ -67,11 +66,11 @@ class YandexSearch(inquiry.Search):
             self.orientation = self.get_answer(self.orient_types)
 
     def get_answer(self, types):
-        key = self.cons_menu(types)
+        key = imaging_tools.cons_menu(types)
         output = types[key]
         return output
 
-    def html_yandex(self, proxy, user_agent, folder_to_save):
+    def html_yandex(self, proxy, user_agent):
         """
         поисковый механизм Яндекса
         максимальная выдача без манипуляций ~100 картинок
@@ -106,7 +105,11 @@ class YandexSearch(inquiry.Search):
         print('i have ({}) links:'.format(len(a_links)))
         urls = []
 
-        f = open(folder_to_save + 'urls_list.txt', 'w')  # открытые файла на запись, имя - согласно запроса
+        f = open(self.path + \
+                 '/search_result/' + \
+                 '_'.join(self.text.split(' ')) + \
+                 '/urls_list.txt',
+                 'w')  # открытые файла на запись, имя - согласно запроса
 
         for a in a_links[:self.quantity]:
             s1 = a.attrs['href']  # находим атрибут с адресом

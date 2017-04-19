@@ -1,82 +1,104 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-
 import os
 
-import check_tools  # верификация ответов
-import download_machine  # машина для закачки
-import file_tools
-import imaging_tools  # красоты там :)
-import inquiry  # работа с запросами
-import program_data  # данные программы
-import proxy_tools
-import search_by_yandex
-import useragents_tools
+from tools import file_tools
+from searching import search_by_google
+from searching import search_by_yandex
+from tools import useragents_tools
+
+from downloading import download_machine
+from searching import search_main
+from tools import imaging_tools, proxy_tools, check_tools
 
 
-def search_start(obj, folder, machine):
-    folder_to = os.getcwd() + folder  # полный путь
+class Program:
+    def __init__(self):
+        self.name = 'ImageSearchDownloadMachine (ISDM)'
+        self.version = '0.1.1'
+        self.author = 'dimishpatriot'
+        self.rep = 'https://github.com/dimishpatriot/img_pars.git'
+        self.path = os.getcwd()
 
+
+def search_start(obj):
+    """
+    запуск поисковой машины
+    :param obj: объект поиска класса YandexSearch или иного
+    """
+    folder_to = file_tools.get_result_folder_name(obj)  # полный путь
     file_tools.make_dir(folder_to)  # проверяется и создается папка
 
-    new_proxy = proxy_tools.get_proxy()  # подмена прокси
-    new_user_agent = useragents_tools.get_useragent()  # подмена useragent
+    new_proxy = proxy_tools.get_proxy(obj.path)  # подмена прокси
 
-    if machine == 1:
+    new_user_agent = useragents_tools.get_useragent(obj.path)  # подмена useragent
+
+    if obj.machine == obj.search_machines[1]:  # пока реализован только яндекс-поиск
         search_by_yandex.YandexSearch.html_yandex(
             obj,
             proxy=new_proxy,
-            user_agent=new_user_agent,
-            folder_to_save=folder_to)
-    elif machine == 2:
+            user_agent=new_user_agent)
+
+    elif obj.machine == obj.search_machines[2]:  # зарезервировано по гугл
+        pass
+
+    elif obj.machine == obj.search_machines[3]:  # зарезервировано под что-то еще
         pass
 
 
-def download_start(obj, folder):
+def download_start(obj):
+    """
+    запуск машины для скачивания
+    :param obj: объект ранее созданный поиском
+    """
     print('And now, answer 2 questions more:')
 
-    print('Would you like to download the links found? (Y/N)')
+    print('Would you like to download the links found? (Y/any)')
     if check_tools.yes_or_no(input('# ')):
-
-        print('Would you like try multi-threading-download? Faster, may be not stable (Y/N)')
-        if check_tools.yes_or_no(input('# ')):
-            multi = 1
-        else:
-            multi = 0
+        print('Would you like try multi-threading-download? Faster, may be not stable (Y/any)')
+        multi = check_tools.yes_or_no(input('# '))  # согласие на многопоточное скачивание
 
         imaging_tools.split_line()  # ---
 
-        print('Downloading begins to {} ...'.format(folder))
-        my_download = download_machine.DM(
-            search_text=obj.text,
-            folder=folder,
-            multi_dwn=multi)  # инициализация машины для скачивания и запуск скачивания
+        dm = download_machine.DM(obj)  # инициализация машины для скачивания и запуск скачивания
 
-    else:
+        if multi:
+            dm.multi_way()
+        elif not multi:
+            dm.one_way()
+
+        imaging_tools.split_line()  # ----
+        print('all links: ', dm.all_links)
+        print('success links: ', dm.success_links)
+
+    else:  # отказ от скачивания
         imaging_tools.split_line()  # ---
-
         print('Downloading abort!')
 
 
 # START
 if __name__ == '__main__':
 
-    imaging_tools.welcome(program_data.Program())  # вступление
+    pr = Program()
 
-    s_machine = inquiry.Search()  # выбор поисковой машины
+    imaging_tools.welcome(pr)  # вступление
 
-    if s_machine.machine_num == 1:
-        s_object = search_by_yandex.YandexSearch()
-        folder_to_save = file_tools.get_folder_name(s_object.text)  # папка для записи
-        imaging_tools.split_line()  # ---
+    sm = search_main.Search(pr)
 
-        search_start(s_object, folder=folder_to_save, machine=s_machine.machine_num)  # инициализация поисковой машины
-        imaging_tools.split_line()  # ---
+    if sm.machine_num == 1:
+        s_object = search_by_yandex.YandexSearch(sm.path)
+        search_start(s_object)  # инициализация поисковой машины
+    if sm.machine_num == 2:
+        s_object = search_by_google.GoogleSearch(sm.path)
+    if sm.machine_num == 3:
+        pass
 
-    if len(s_object.urls_list) > 0:
-        download_start(s_object, folder=folder_to_save)
+    imaging_tools.split_line()  # ---
+
+    if len(s_object.urls_list) > 0:  # если что-то есть в урлах, предложение закачать
+        download_start(s_object)
 
     else:
         print('Nothing to download. Sorry & try later')
 
-    imaging_tools.bye_bye()
+    imaging_tools.bye_bye()  # прощание
