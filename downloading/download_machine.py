@@ -13,7 +13,6 @@ class DM:
 
         file_tools.make_dir(self.folder_to_save)  # проверяется и создается папка
         print('+ твоя папка для сохранений \'{}\''.format(self.folder_to_save))
-        print('кстати, там же файл urls_list.txt для данного запроса')
 
     def one_way(self):
         """
@@ -26,7 +25,6 @@ class DM:
 
         for u in self.url_list:
             file_name, url = file_tools.get_file_name(u, n_string, text=self.text)
-            # if check_tools.link_is_pic(url):
             print('файл #{0} \'{1}\' сейчас скачивается'.format(n_string, file_name))
             n_string += 1
 
@@ -37,16 +35,11 @@ class DM:
                         for chunk in r.iter_content(102400):
                             f.write(chunk)
                     success += 1
-
                     print('- OK')
                 else:
                     print('- не доступен')
             except:
                 print('- ошибка!')
-                # else:
-                # print('- ссылка указывает не на изображение!')
-                # n_string += 1
-                # continue
 
         self.all_links = n_string
         self.success_links = success

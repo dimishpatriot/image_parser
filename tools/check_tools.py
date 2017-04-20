@@ -27,19 +27,3 @@ def is_num(num, min_value=0, max_value=100):
         ans = False
     return ans
 
-
-def link_is_pic(link):
-    """
-    проверка, является ли ссылка, ссылкой на картинку определенных форматов
-    :param link: ссылка http
-    :return: True/False через 0/1
-    """
-    ext_dict = ('jpg', 'jpeg', 'png', 'gif')  # список возможных расширений
-    ext = link.split('.')[-1]  # разделение ссылки по точке, первое с конца - расширение (практически всегда)
-
-    if ext_dict.count(ext) > 0:
-        ans = True
-    else:
-        ans = False
-
-    return ans
