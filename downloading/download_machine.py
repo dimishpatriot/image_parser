@@ -12,38 +12,34 @@ class DM:
         self.text = obj.text
 
         file_tools.make_dir(self.folder_to_save)  # проверяется и создается папка
-        print('+ your folder is \'{}\''.format(self.folder_to_save))
+        print('+ твоя папка для сохранений \'{}\''.format(self.folder_to_save))
 
     def one_way(self):
         """
         однопоточная закачка
         """
+        print()
+        print('Однопоточное скачивание (для терпеливых)...')
         success = 0
         n_string = 1
 
         for u in self.url_list:
             file_name, url = file_tools.get_file_name(u, n_string, text=self.text)
-            if check_tools.link_is_pic(url):
-                print('file #{0} \'{1}\' now downloading'.format(n_string, file_name))
-                n_string += 1
+            print('файл #{0} \'{1}\' сейчас скачивается'.format(n_string, file_name))
+            n_string += 1
 
-                try:
-                    r = requests.get(url, stream=True)
-                    if r.status_code == 200:
-                        with open(self.folder_to_save + '/' + file_name, 'bw') as f:
-                            for chunk in r.iter_content(102400):
-                                f.write(chunk)
-                        success += 1
-
-                        print('- OK')
-                    else:
-                        print('- not available now')
-                except:
-                    print('- false!')
-            else:
-                print('-link is not picture!')
-                n_string += 1
-                continue
+            try:
+                r = requests.get(url, stream=True)
+                if r.status_code == 200:
+                    with open(self.folder_to_save + '/' + file_name, 'bw') as f:
+                        for chunk in r.iter_content(102400):
+                            f.write(chunk)
+                    success += 1
+                    print('- OK')
+                else:
+                    print('- не доступен')
+            except:
+                print('- ошибка!')
 
         self.all_links = n_string
         self.success_links = success
@@ -53,6 +49,8 @@ class DM:
         мультипоточная закачка
         :return: успешность, количество строк
         """
+        print()
+        print('Многопоточное скачивание...')
         success = 0
         n_process_start = 0
         n_string = 0

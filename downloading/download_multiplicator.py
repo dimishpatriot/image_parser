@@ -15,6 +15,7 @@ class MD(Thread):
         self.folder = folder
         self.success_flag = 0
 
+
     def run(self):
         max_attempt = 3  # максимально ечисло попытко
         attempt = 1  # счетчик попыток
@@ -24,11 +25,11 @@ class MD(Thread):
                 r = requests.get(self.url, stream=True)  # получение реквеста, если неудачно, счетчик +1 и повтор
 
                 if r.status_code == 200:  # проверка запроса на код 200
-                    print('file #{0} start downloading...'.format(self.file))
+                    print('файл #{0} начал скачиваться...'.format(self.file))
 
                     with open(self.folder + '/' + self.file, 'bw') as f:
 
-                        for chunk in r.iter_content(10240):
+                        for chunk in r.iter_content(102400):
                             f.write(chunk)
 
                         self.success_flag = 1  # успешное скачивание
@@ -36,7 +37,7 @@ class MD(Thread):
                     break
 
                 else:
-                    print(self.file + ' SK=', r.status_code, 'try=', attempt)
+                    print(self.file + ' ответ сервера:', r.status_code, 'попытка: ', attempt)
                     attempt += 1
             except:
                 attempt += 1
