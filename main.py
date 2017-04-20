@@ -6,6 +6,7 @@ from downloading import download_machine
 from searching import search_by_google
 from searching import search_by_yandex
 from tools import file_tools
+from tools import html_tools
 from tools import imaging_tools, proxy_tools, check_tools
 from tools import useragents_tools
 
@@ -27,12 +28,13 @@ def search_start(obj, machine):
     folder_to = file_tools.get_result_folder_name(obj)  # полный путь
     file_tools.make_dir(folder_to)  # проверяется и создается папка
 
+    print('Пробую сменить прокси...')
     new_proxy = proxy_tools.get_proxy(obj.path)  # подмена прокси
 
     new_user_agent = useragents_tools.get_useragent(obj.path)  # подмена useragent
 
     if machine == 1:  # пока реализован только яндекс-поиск
-        search_by_yandex.YandexSearch.html_yandex(
+        links = search_by_yandex.YandexSearch.html_yandex(
             obj,
             proxy=new_proxy,
             user_agent=new_user_agent)
@@ -43,17 +45,19 @@ def search_start(obj, machine):
     elif machine == 3:  # зарезервировано под что-то еще
         pass
 
+    html_tools.clear_links(obj, links)
+
 
 def download_start(obj):
     """
     запуск машины для скачивания
     :param obj: объект ранее созданный поиском
     """
-    print('And now, answer 2 questions more:')
+    print('Теперь, ответь еще на 2 вопроса:')
 
-    print('Would you like to download the links found? (Y/any)')
+    print('1. Хочешь скачать изображения по найденным ссылкам? (Д/)')
     if check_tools.yes_or_no(input('# ')):
-        print('Would you like try multi-threading-download? Faster, may be not stable (Y/any)')
+        print('2. Хочешь использовать многопоточное скачивание? Это гораздо быстрее, но может быть не стабильно (Д/)')
         multi = check_tools.yes_or_no(input('# '))  # согласие на многопоточное скачивание
 
         imaging_tools.split_line()  # ---
@@ -66,12 +70,12 @@ def download_start(obj):
             dm.one_way()
 
         imaging_tools.split_line()  # ----
-        print('all links: ', dm.all_links)
-        print('success links: ', dm.success_links)
+        print('Всего выбрано ссылок: ', dm.all_links)
+        print('Успешно скачано: ', dm.success_links)
 
     else:  # отказ от скачивания
         imaging_tools.split_line()  # ---
-        print('Downloading abort!')
+        print('Скачки отменяются!')
 
 
 # START
@@ -81,9 +85,10 @@ if __name__ == '__main__':
 
     imaging_tools.welcome(pr)  # вступление
 
-    search_machines = {0: 'Select search machine:',
-                       1: 'Yandex.ru',
-                       2: 'Google.com (not realised yet :)'}
+    search_machines = {0: 'Выбери поисковую машину:',
+                       1: 'Yandex.ru, родной',
+                       2: 'Google.com (пока не реализовано :)',
+                       3: 'Что-то еще (пока тоже не реализовано :))'}
 
     mach = imaging_tools.cons_menu(search_machines)
 
@@ -101,6 +106,6 @@ if __name__ == '__main__':
         download_start(s_object)
 
     else:
-        print('Nothing to download. Sorry & try later')
+        print('Нечего скачивать. Прости и попробуй позднее')
 
     imaging_tools.bye_bye()  # прощание

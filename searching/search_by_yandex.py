@@ -1,4 +1,4 @@
-import urllib
+
 
 from searching import search_main
 from tools import html_tools
@@ -6,15 +6,16 @@ from tools import imaging_tools
 
 
 class YandexSearch(search_main.Search):
-    search_types = {0: 'Select type of search:',
-                    1: 'Simple search. Only text string input. Output - 10 pics',
-                    2: 'Extend search. Input text, quantity, size',
-                    3: 'Complex search. Input all (text, quantity, size, type, etc...)'}
-    size_types = {0: 'Select size:',
-                  1: 'large',
-                  2: 'medium',
-                  3: 'small'}
-    gamma_types = {0: 'Select main color gamma:',
+    max_pix_1 = 15
+    search_types = {0: 'Выбери тип поиска:',
+                    1: 'Простой поиск. Надо ввести только поисковую строку. На выходе {} изображений'.format(max_pix_1),
+                    2: 'Расширенный поиск. Надо ввести текст, количество и размер изображений',
+                    3: 'Комплексный поиск. Вводится все (текст, количество, размер, тип, гамма, ориентация)'}
+    size_types = {0: ('Выбери размер:', ''),
+                  1: ('большой', 'large'),
+                  2: ('средний', 'medium'),
+                  3: ('малый', 'small')}
+    gamma_types = {0: 'Выбери цветовую гамму:',
                    1: 'color',
                    2: 'grey',
                    3: 'red',
@@ -26,11 +27,11 @@ class YandexSearch(search_main.Search):
                    9: 'violet',
                    10: 'white',
                    11: 'black'}
-    orient_types = {0: 'Select orientation:',
+    orient_types = {0: 'Выбери ориентацию изображения:',
                     1: 'horizontal',
                     2: 'vertical',
                     3: 'square'}
-    type_types = {0: 'Select type:',
+    type_types = {0: 'Выбери тип изображения:',
                   1: 'photo',
                   2: 'clipart',
                   3: 'lineart',
@@ -64,9 +65,12 @@ class YandexSearch(search_main.Search):
             self.gamma = self.get_answer(self.gamma_types)
             self.orientation = self.get_answer(self.orient_types)
 
+        print('Запрос принят! Начинаю обработку...')
+        imaging_tools.split_line()
+
     def get_answer(self, types):
-        key = imaging_tools.cons_menu(types)
-        output = types[key]
+        key = imaging_tools.cons_menu(types, n=2)
+        output = types[key][1]
         return output
 
     def html_yandex(self, proxy, user_agent):
@@ -89,49 +93,22 @@ class YandexSearch(search_main.Search):
                           self.get_color_str() + \
                           self.get_numdoc_str(numdoc)
 
-        print('search_url = ', self.search_url)
+        print('Поисковый запрос сформирован > ', self.search_url)
 
         main_page_html = html_tools.get_html(self.search_url, proxy, user_agent)  # чтение html
 
         main_soup = html_tools.get_soup(main_page_html)
 
-        print('+ soup is hot :)')
+        # print('+ soup is hot :)')
 
         a_links = main_soup.find_all(
             'a',
             class_='serp-item__link')
 
-        print('i have ({}) links:'.format(len(a_links)))
-        urls = []
+        imaging_tools.split_line()
 
-        f = open(self.path + \
-                 '/search_result/' + \
-                 '_'.join(self.text.split(' ')) + \
-                 '/urls_list.txt',
-                 'w')  # открытые файла на запись, имя - согласно запроса
+        return a_links
 
-        for a in a_links[:self.quantity]:
-            s1 = a.attrs['href']  # находим атрибут с адресом
-            if self.orientation:
-                s2 = s1.split('&iorient=')[-2]  # отрезаем хвост (КОСТЫЛЬ!!!)
-            else:
-                s2 = s1.split('&pos=')[-2]  # отрезаем хвост (КОСТЫЛЬ!!!)
-
-            s3 = s2.split('img_url=')[-1]  # отрезаем голову
-            s4 = urllib.parse.unquote_plus(
-                s3, encoding='utf-8')  # раскодируем
-
-            print('url: ', s4)
-            urls.append(s4)
-            f.write(s4 + '\n')
-
-        if len(urls) > 0:
-            print('+ urls_list complete. len=', len(urls))
-            print('+ urls_list save to /search_result/' + self.text + '/urls_list.txt')
-        else:
-            print('- url list is empty!')
-
-        self.urls_list = urls
 
     def get_size_str(self):
         if self.size is None:  # формирование размера в строке запроса

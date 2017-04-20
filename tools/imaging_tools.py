@@ -4,9 +4,9 @@ def welcome(program_data):
     :param program_data: выходные данные программы
     """
     print('=' * 78)
-    print('Welcome to __{0}__, version {1}'.format(program_data.name, program_data.version))
-    print('Author: {}'.format(program_data.author))
-    print('Repository: {}'.format(program_data.rep))
+    print('Велкам в  __{0}__, версия {1}'.format(program_data.name, program_data.version))
+    print('Автор: {}'.format(program_data.author))
+    print('Хранилище: {}'.format(program_data.rep))
     print('=' * 78)
 
 
@@ -14,7 +14,7 @@ def bye_bye():
     """
     прощальное слово
     """
-    print('Bye Bye! See you later ^)')
+    print('Всех благ! Ты заходи, если что ^)')
     print('=' * 78)
 
 
@@ -25,12 +25,26 @@ def split_line():
     print('-' * 78)
 
 
-def cons_menu(variant_dict):
-    for key in list(variant_dict.keys()):
-        if key == 0:
-            print(variant_dict[key])  # вопрос
-        else:
-            print(key, ' ', variant_dict[key])  # варианты ответа
+def cons_menu(variant_dict, n=1):
+    '''
+    выводит меню на экран и предоставляет выбор
+    :param variant_dict: 
+    :param n: количество подвариантов в словаре
+    :return: 
+    '''
+    if n == 1:
+        for key in list(variant_dict.keys()):
+            if key == 0:
+                print(variant_dict[key])  # вопрос
+            else:
+                print(key, ' ', variant_dict[key])  # варианты ответа
+
+    elif n == 2:
+        for key in list(variant_dict.keys()):
+            if key == 0:
+                print(variant_dict[key][0])  # вопрос
+            else:
+                print(key, ' ', variant_dict[key][0])  # варианты ответа
 
     while True:
         try:
@@ -41,7 +55,7 @@ def cons_menu(variant_dict):
         except:
             pass
 
-        print('Make your right choice!')
+        print('Выбирай с умом!')
 
     split_line()  # ---
 

@@ -4,7 +4,7 @@ def yes_or_no(answer):
     :param answer: ответ str
     :return: True/False
     """
-    d = ('y', 'Y', 'yes', 'Yes', 'YES')
+    d = ('y', 'Y', 'yes', 'Yes', 'YES', 'ДА', 'да', 'Д', 'д', 'Да')
     yes = False
     if d.count(answer):
         yes = True
