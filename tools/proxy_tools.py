@@ -1,13 +1,14 @@
 from random import choice
 
 from tools import html_tools
-from tools import useragents_tools
 from tools import imaging_tools
+from tools import useragents_tools
 
 
 def proxy_update(proxy, main_path):
     """
     обновление листа прокси
+    :param main_path: путь главной папки
     :param proxy: старый прокси
     """
     print('try to update px-list....')
@@ -29,7 +30,7 @@ def proxy_update(proxy, main_path):
         save_proxy_list(new_ip, main_path)
         print('+ proxy list update - OK')
     else:
-        print('- proxy list will old eat')
+        print('- proxy list will old')
 
     imaging_tools.split_line()  # ---
 
@@ -51,8 +52,8 @@ def get_proxy(path):
 def save_proxy_list(new_proxy_list, path):
     """
     обновление/запись proxy_list.txt
+    :param path:  путь главной папки
     :param new_proxy_list: 
-    :return: 
     """
     f = open(path+'/lists/proxy_list.txt', 'w')
     for x in new_proxy_list:

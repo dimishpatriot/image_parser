@@ -1,8 +1,7 @@
 import urllib
 
-from tools import html_tools
-
 from searching import search_main
+from tools import html_tools
 from tools import imaging_tools
 
 
@@ -40,12 +39,12 @@ class YandexSearch(search_main.Search):
     maximum_pics = 100
 
     def __init__(self, path):
-        self.path = path
+        search_main.Search.__init__(self, path)
+
         self.size = None
         self.type = None
         self.gamma = None
         self.orientation = None
-        self.machine = search_main.Search.search_machines[1]  # 1 - яндекс-поиск
 
         self.search_type = imaging_tools.cons_menu(self.search_types)  # выбор типа поиска
 

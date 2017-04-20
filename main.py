@@ -2,14 +2,12 @@
 # -*- coding: utf-8 -*-
 import os
 
-from tools import file_tools
+from downloading import download_machine
 from searching import search_by_google
 from searching import search_by_yandex
-from tools import useragents_tools
-
-from downloading import download_machine
-from searching import search_main
+from tools import file_tools
 from tools import imaging_tools, proxy_tools, check_tools
+from tools import useragents_tools
 
 
 class Program:
@@ -21,7 +19,7 @@ class Program:
         self.path = os.getcwd()
 
 
-def search_start(obj):
+def search_start(obj, machine):
     """
     запуск поисковой машины
     :param obj: объект поиска класса YandexSearch или иного
@@ -33,16 +31,16 @@ def search_start(obj):
 
     new_user_agent = useragents_tools.get_useragent(obj.path)  # подмена useragent
 
-    if obj.machine == obj.search_machines[1]:  # пока реализован только яндекс-поиск
+    if machine == 1:  # пока реализован только яндекс-поиск
         search_by_yandex.YandexSearch.html_yandex(
             obj,
             proxy=new_proxy,
             user_agent=new_user_agent)
 
-    elif obj.machine == obj.search_machines[2]:  # зарезервировано по гугл
+    elif machine == 2:  # зарезервировано по гугл
         pass
 
-    elif obj.machine == obj.search_machines[3]:  # зарезервировано под что-то еще
+    elif machine == 3:  # зарезервировано под что-то еще
         pass
 
 
@@ -83,14 +81,18 @@ if __name__ == '__main__':
 
     imaging_tools.welcome(pr)  # вступление
 
-    sm = search_main.Search(pr)
+    search_machines = {0: 'Select search machine:',
+                       1: 'Yandex.ru',
+                       2: 'Google.com (not realised yet :)'}
 
-    if sm.machine_num == 1:
-        s_object = search_by_yandex.YandexSearch(sm.path)
-        search_start(s_object)  # инициализация поисковой машины
-    if sm.machine_num == 2:
-        s_object = search_by_google.GoogleSearch(sm.path)
-    if sm.machine_num == 3:
+    mach = imaging_tools.cons_menu(search_machines)
+
+    if mach == 1:
+        s_object = search_by_yandex.YandexSearch(pr.path)
+        search_start(s_object, mach)  # инициализация поисковой машины
+    if mach == 2:
+        s_object = search_by_google.GoogleSearch(pr.path)
+    if mach == 3:
         pass
 
     imaging_tools.split_line()  # ---
