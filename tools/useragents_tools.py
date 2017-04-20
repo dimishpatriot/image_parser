@@ -1,22 +1,19 @@
 from random import choice
 
-from tools import imaging_tools
-
 
 def get_useragent(path):
     """
     получение случайного Useragent из файла
     :return: 
     """
+    print('Выбираю подменный user-agent...')
     try:
         ua_list = open(path+'/lists/useragents_list.txt').read().split('\n')
 
         user_agent = {'User-Agent': choice(ua_list)}
-        print('+ user-agent select - OK', user_agent)
+        print('+ user-agent успешно выбран', user_agent)
     except:
         user_agent = None
-        print('- you have not user-agent yet')
-
-    imaging_tools.split_line()  # ---
+        print('- user-agent не выбран, скорее всего, что то с файлом')
 
     return user_agent
