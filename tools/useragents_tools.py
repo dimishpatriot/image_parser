@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+# useragent_tools.py
+# github.com/dimishpatriot/img_pars
+
 from random import choice
 
 
@@ -8,7 +12,7 @@ def get_useragent(path):
     """
     print('Выбираю подменный user-agent...')
     try:
-        ua_list = open(path+'/lists/useragents_list.txt').read().split('\n')
+        ua_list = open(path + '/lists/useragents_list.txt').read().split('\n')
 
         user_agent = {'User-Agent': choice(ua_list)}
         print('+ user-agent успешно выбран', user_agent)

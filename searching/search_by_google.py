@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+# search_by_google.py
+# github.com/dimishpatriot/img_pars
+
 from searching import search_main
 
 

@@ -1,7 +1,8 @@
-#!/usr/bin/python3
 # -*- coding: utf-8 -*-
-import os
+# main.py
+# github.com/dimishpatriot/img_pars
 
+import os
 from downloading import download_machine
 from searching import search_by_google
 from searching import search_by_yandex
@@ -86,9 +87,8 @@ if __name__ == '__main__':
     imaging_tools.welcome(pr)  # вступление
 
     search_machines = {0: 'Выбери поисковую машину:',
-                       1: 'Yandex.ru, родной',
-                       2: 'Google.com (пока не реализовано :)',
-                       3: 'Что-то еще (пока тоже не реализовано :))'}
+                       1: 'Yandex.ru',
+                       2: 'Google.com (пока не реализовано :)'}
 
     mach = imaging_tools.cons_menu(search_machines)
 

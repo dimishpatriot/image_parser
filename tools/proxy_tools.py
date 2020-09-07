@@ -1,5 +1,8 @@
-from random import choice
+# -*- coding: utf-8 -*-
+# proxy_tools.py
+# github.com/dimishpatriot/img_pars
 
+from random import choice
 from tools import html_tools
 from tools import useragents_tools
 
@@ -29,7 +32,8 @@ def proxy_update(proxy, main_path):
         save_proxy_list(new_ip, main_path)
         print('+ прокси-лист успешно обновлен')
     else:
-        print('- что-то пошло не так, прокси-лист будет старый, но, возможно, вполне рабочий')
+        print(
+            '- что-то пошло не так, прокси-лист будет старый, но, возможно, вполне рабочий')
 
 
 def get_proxy(path):
@@ -37,7 +41,7 @@ def get_proxy(path):
     получение прокси из proxy_list.txt
     :return: новый прокси
     """
-    px_list = open(path+'/lists/proxy_list.txt').read().split('\n')
+    px_list = open(path + '/lists/proxy_list.txt').read().split('\n')
 
     proxy = {'http': 'http://' + choice(px_list)}
     print('+ прокси успешно подменен: ', proxy)
@@ -52,7 +56,7 @@ def save_proxy_list(new_proxy_list, path):
     :param path:  путь главной папки
     :param new_proxy_list: 
     """
-    f = open(path+'/lists/proxy_list.txt', 'w')
+    f = open(path + '/lists/proxy_list.txt', 'w')
     for x in new_proxy_list:
-        f.write(x+'\n')
+        f.write(x + '\n')
     f.close()

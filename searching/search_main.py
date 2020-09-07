@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+# search_main.py
+# github.com/dimishpatriot/img_pars
+
 from tools import check_tools
 
 

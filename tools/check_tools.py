@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+# check_tools.py
+# github.com/dimishpatriot/img_pars
+
 def yes_or_no(answer):
     """
     проверка на согласие
@@ -21,9 +25,9 @@ def is_num(num, min_value=0, max_value=100):
     """
     ans = False
     try:
-        if min_value <= int(num) <= max_value:  # Одновременная проверка на диапозон и на int
+        # Одновременная проверка на диапозон и на int
+        if min_value <= int(num) <= max_value:
             ans = True
     except:
         ans = False
     return ans
-

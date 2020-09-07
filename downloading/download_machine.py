@@ -1,17 +1,23 @@
-import requests
+# -*- coding: utf-8 -*-
+# download_machine.py
+# github.com/dimishpatriot/img_pars
 
+import requests
 from downloading import download_multiplicator
 from tools import file_tools, check_tools
 
 
 class DM:
     def __init__(self, obj):
-        self.folder_to_save = file_tools.get_result_folder_name(obj)  # полный путь
-        self.url_list = open((self.folder_to_save + 'urls_list.txt'), 'r')  # список ссылок для скачивнаия
+        self.folder_to_save = file_tools.get_result_folder_name(
+            obj)  # полный путь
+        # список ссылок для скачивнаия
+        self.url_list = open((self.folder_to_save + 'urls_list.txt'), 'r')
 
         self.text = obj.text
 
-        file_tools.make_dir(self.folder_to_save)  # проверяется и создается папка
+        # проверяется и создается папка
+        file_tools.make_dir(self.folder_to_save)
         print('+ твоя папка для сохранений \'{}\''.format(self.folder_to_save))
 
     def one_way(self):
@@ -24,8 +30,10 @@ class DM:
         n_string = 1
 
         for u in self.url_list:
-            file_name, url = file_tools.get_file_name(u, n_string, text=self.text)
-            print('файл #{0} \'{1}\' сейчас скачивается'.format(n_string, file_name))
+            file_name, url = file_tools.get_file_name(
+                u, n_string, text=self.text)
+            print('файл #{0} \'{1}\' сейчас скачивается'.format(
+                n_string, file_name))
             n_string += 1
 
             try:
@@ -59,10 +67,12 @@ class DM:
         for u in self.url_list:
             n_string += 1
             url = u.rstrip()  # удаление символа конца строки в строке файла
-            file_name = file_tools.get_file_name(url, n_process_start, text=self.text)
+            file_name = file_tools.get_file_name(
+                url, n_process_start, text=self.text)
 
             if check_tools.link_is_pic(url):
-                dwn.append(download_multiplicator.MD(url, file_name, self.folder_to_save))
+                dwn.append(download_multiplicator.MD(
+                    url, file_name, self.folder_to_save))
                 dwn[n_process_start].start()
                 n_process_start += 1
             else:

@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+# html_tools.py
+# github.com/dimishpatriot/img_pars
+
 import urllib
 from urllib.parse import quote, urlsplit, urlunsplit
 
@@ -52,9 +56,9 @@ def clear_links(obj, links):
     print('Найдено ({}) ссылок на изображения:'.format(len(a_links)))
     urls = []
 
-    f = open(obj.path + \
-             '/search_result/' + \
-             '_'.join(obj.text.split(' ')) + \
+    f = open(obj.path +
+             '/search_result/' +
+             '_'.join(obj.text.split(' ')) +
              '/urls_list.txt',
              'w')  # открытые файла на запись, имя - согласно запроса
 
@@ -75,7 +79,8 @@ def clear_links(obj, links):
 
     if len(urls) > 0:
         print('+ Лист ссылок сформирован. Количество: ', len(urls), ' шт.')
-        print('+ Лист ссылок записан в файл > /search_result/' + obj.text + '/urls_list.txt')
+        print('+ Лист ссылок записан в файл > /search_result/' +
+              obj.text + '/urls_list.txt')
     else:
         print('- Лист ссылок пуст!')
 

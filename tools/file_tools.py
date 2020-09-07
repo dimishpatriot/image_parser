@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+# main.py
+# github.com/dimishpatriot/img_pars
+
 import os
 
 
@@ -9,7 +13,8 @@ def get_file_name(url, num, text):
     :param text: текст запроса
     :return: имя файла
     """
-    pic_name = text + '_' + str(num).zfill(2)  # полное имя из запроса и порядкового номера формата XX
+    pic_name = text + '_' + \
+        str(num).zfill(2)  # полное имя из запроса и порядкового номера формата XX
     file_ext = url.split('.')[-1]  # определение расширения файла
 
     return pic_name + '.' + file_ext

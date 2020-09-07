@@ -1,10 +1,15 @@
+# -*- coding: utf-8 -*-
+# imaging_tools.py
+# github.com/dimishpatriot/img_pars
+
 def welcome(program_data):
     """
     вступление
     :param program_data: выходные данные программы
     """
     print('=' * 78)
-    print('Велкам в  __{0}__, версия {1}'.format(program_data.name, program_data.version))
+    print('Велкам в  __{0}__, версия {1}'.format(
+        program_data.name, program_data.version))
     print('Автор: {}'.format(program_data.author))
     print('Хранилище: {}'.format(program_data.rep))
     print('=' * 78)
@@ -28,9 +33,9 @@ def split_line():
 def cons_menu(variant_dict, n=1):
     '''
     выводит меню на экран и предоставляет выбор
-    :param variant_dict: 
+    :param variant_dict:
     :param n: количество подвариантов в словаре
-    :return: 
+    :return:
     '''
     if n == 1:
         for key in list(variant_dict.keys()):
