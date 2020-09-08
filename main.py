@@ -15,7 +15,7 @@ from tools import useragents_tools
 class Program:
     def __init__(self):
         self.name = 'ImageSearchDownloadMachine (ISDM)'
-        self.version = '0.1.1'
+        self.version = '0.2'
         self.author = 'dimishpatriot'
         self.rep = 'https://github.com/dimishpatriot/img_pars.git'
         self.path = os.getcwd()
@@ -56,9 +56,9 @@ def download_start(obj):
     """
     print('Теперь, ответь еще на 2 вопроса:')
 
-    print('1. Хочешь скачать изображения по найденным ссылкам? (Д/)')
+    print('1. Хочешь скачать изображения по найденным ссылкам? (y/n)')
     if check_tools.yes_or_no(input('# ')):
-        print('2. Хочешь использовать многопоточное скачивание? Это гораздо быстрее, но может быть не стабильно (Д/)')
+        print('2. Хочешь использовать многопоточное скачивание? Это гораздо быстрее, но может быть не стабильно (y/n)')
         multi = check_tools.yes_or_no(input('# '))  # согласие на многопоточное скачивание
 
         imaging_tools.split_line()  # ---

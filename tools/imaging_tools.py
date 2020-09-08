@@ -47,9 +47,9 @@ def cons_menu(variant_dict, n=1):
     elif n == 2:
         for key in list(variant_dict.keys()):
             if key == 0:
-                print(variant_dict[key][0])  # вопрос
+                print(variant_dict[key][0:])  # вопрос
             else:
-                print(key, ' ', variant_dict[key][0])  # варианты ответа
+                print(key, ' ', variant_dict[key][0:])  # варианты ответа
 
     while True:
         try:

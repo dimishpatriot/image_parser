@@ -2,3 +2,4 @@ search_result/
 __pycache__/
 venv/
 .idea/
+.ipynb_checkpoints/

@@ -8,15 +8,17 @@ from tools import imaging_tools
 
 
 class YandexSearch(search_main.Search):
-  max_pix_1 = 15
+  max_pix_1 = 10
   search_types = {0: 'Выбери тип поиска:',
                   1: 'Простой поиск. Надо ввести только поисковую строку. На выходе {} изображений'.format(max_pix_1),
                   2: 'Расширенный поиск. Надо ввести текст, количество и размер изображений',
                   3: 'Комплексный поиск. Вводится все (текст, количество, размер, тип, гамма, ориентация)'}
-  size_types = {0: ('Выбери размер:', ''),
-                1: ('большой', 'large'),
-                2: ('средний', 'medium'),
-                3: ('малый', 'small')}
+    
+  size_types = {0: 'Выбери размер:',
+                1: 'large',
+                2: 'medium',
+                3: 'small'}
+
   gamma_types = {0: 'Выбери цветовую гамму:',
                  1: 'color',
                  2: 'grey',
@@ -29,16 +31,19 @@ class YandexSearch(search_main.Search):
                  9: 'violet',
                  10: 'white',
                  11: 'black'}
+    
   orient_types = {0: 'Выбери ориентацию изображения:',
                   1: 'horizontal',
                   2: 'vertical',
                   3: 'square'}
+
   type_types = {0: 'Выбери тип изображения:',
                 1: 'photo',
                 2: 'clipart',
                 3: 'lineart',
                 4: 'face',
                 5: 'demotivator'}
+    
   maximum_pics = 100
 
   def __init__(self, path):

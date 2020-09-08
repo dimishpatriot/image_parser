@@ -25,7 +25,7 @@ def get_html(url, proxy, user_agent):
             headers=user_agent,
             proxies=proxy).text  # чтение html
         print('+ html получен!')
-
+        
     except:
         print('- html не доступен в данный момент!')
 
@@ -63,19 +63,16 @@ def clear_links(obj, links):
              'w')  # открытые файла на запись, имя - согласно запроса
 
     for a in a_links[:obj.quantity]:
-        s1 = a.attrs['href']  # находим атрибут с адресом
-        if obj.orientation:
-            s2 = s1.split('&iorient=')[-2]  # отрезаем хвост (КОСТЫЛЬ!!!)
-        else:
-            s2 = s1.split('&pos=')[-2]  # отрезаем хвост (КОСТЫЛЬ!!!)
+        addr = a.attrs["href"].split("&img_url=")[1].split("&text=")[0]
+        if "&isize=" in addr:
+            addr = addr.split("&isize=")[0]
+        if "&iorient=" in addr:
+            addr = addr.split("&iorient=")[0]
+        url = urllib.parse.unquote_plus(addr, encoding="utf-8")
 
-        s3 = s2.split('img_url=')[-1]  # отрезаем голову
-        s4 = urllib.parse.unquote_plus(
-            s3, encoding='utf-8')  # раскодируем
-
-        print('url: ', s4)
-        urls.append(s4)
-        f.write(s4 + '\n')
+        print('url: ', url)
+        urls.append(url)
+        f.write(url + '\n')
 
     if len(urls) > 0:
         print('+ Лист ссылок сформирован. Количество: ', len(urls), ' шт.')

@@ -30,24 +30,27 @@ class DM:
         n_string = 1
 
         for u in self.url_list:
-            file_name, url = file_tools.get_file_name(
-                u, n_string, text=self.text)
-            print('файл #{0} \'{1}\' сейчас скачивается'.format(
-                n_string, file_name))
-            n_string += 1
+            url = u.rstrip()  # удаление символа конца строки в строке файла
+            if check_tools.link_is_pic(url):
+                file_name = file_tools.get_file_name(url, n_string, text=self.text)
+                print('файл #{0} \'{1}\' сейчас скачивается'.format(
+                    n_string, file_name))
+                n_string += 1
 
-            try:
-                r = requests.get(url, stream=True)
-                if r.status_code == 200:
-                    with open(self.folder_to_save + '/' + file_name, 'bw') as f:
-                        for chunk in r.iter_content(102400):
-                            f.write(chunk)
-                    success += 1
-                    print('- OK')
-                else:
-                    print('- не доступен')
-            except:
-                print('- ошибка!')
+                try:
+                    r = requests.get(url, stream=True)
+                    if r.status_code == 200:
+                        with open(self.folder_to_save + '/' + file_name, 'bw') as f:
+                            for chunk in r.iter_content(102400):
+                                f.write(chunk)
+                        success += 1
+                        print('- OK')
+                    else:
+                        print('- не доступен')
+                except:
+                    print('- ошибка!')
+            else:
+                continue
 
         self.all_links = n_string
         self.success_links = success

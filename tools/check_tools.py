@@ -31,3 +31,14 @@ def is_num(num, min_value=0, max_value=100):
     except:
         ans = False
     return ans
+
+def link_is_pic(url):
+    pic_ext = ("jpg", "jpeg", "png", "tiff", "bmp", 
+               "gif", "pcx", "epf", "ico", "cdr",
+              "svg")
+    ext = url.split('.')[-1]
+    if ext in pic_ext:
+        return True
+    else:
+        return False
+    
