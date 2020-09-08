@@ -96,7 +96,10 @@ if __name__ == '__main__':
         s_object = search_by_yandex.YandexSearch(pr.path)
         search_start(s_object, mach)  # инициализация поисковой машины
     if mach == 2:
-        s_object = search_by_google.GoogleSearch(pr.path)
+        print("Поиск по Google пока не работает (см.выше). Запускаю Yandex :)\n")
+        # s_object = search_by_google.GoogleSearch(pr.path)
+        s_object = search_by_yandex.YandexSearch(pr.path)
+        search_start(s_object, mach)  # инициализация поисковой машины
     if mach == 3:
         pass
 
