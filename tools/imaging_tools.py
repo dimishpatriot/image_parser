@@ -54,7 +54,7 @@ def cons_menu(variant_dict, n=1):
     while True:
         try:
             ans = int(input('#: '))
-            if ans in variant_dict.keys():
+            if ans in variant_dict.keys() and ans != 0:
                 ans_num = ans
                 break
         except:
