@@ -15,7 +15,7 @@ from tools import useragents_tools
 class Program:
     def __init__(self):
         self.name = 'ImageSearchDownloadMachine (ISDM)'
-        self.version = '0.2'
+        self.version = '0.1 beta'
         self.author = 'dimishpatriot'
         self.rep = 'https://github.com/dimishpatriot/img_pars.git'
         self.path = os.getcwd()
