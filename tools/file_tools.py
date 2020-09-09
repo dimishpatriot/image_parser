@@ -5,7 +5,7 @@
 import os
 
 
-def get_file_name(url, num, text):
+def get_file_name(url: str, num: int, text: str) -> str:
     """
     получение имени для сохраняемого файла изображения
     :param url: ссылка
@@ -13,26 +13,24 @@ def get_file_name(url, num, text):
     :param text: текст запроса
     :return: имя файла
     """
-    pic_name = text + '_' + \
-        str(num).zfill(2)  # полное имя из запроса и порядкового номера формата XX
-    file_ext = url.split('.')[-1]  # определение расширения файла
-
-    return pic_name + '.' + file_ext
+    pic_name = f"{text}_{str(num).zfill(2)}"  # полное имя из запроса и порядкового номера формата XX
+    file_ext = url.split(".")[-1]  # определение расширения файла
+    return f"{pic_name}.{file_ext}"
 
 
-def make_dir(folder):
+def make_dir(folder: str) -> None:
     """
     создание рабочей директории для сохранения результатов
     :param folder: папка
     """
     if not os.path.exists(folder):  # проверка на наличие папки
         os.makedirs(folder)  # создание папки
-        pass
 
 
-def get_result_folder_name(obj):
+def get_result_folder_name(obj) -> str:
     """
     получение имени папки с учетом текущего местоположения
     :return: имя папки
     """
-    return obj.path + '/search_result/' + '_'.join(obj.text.split(' ')) + '/'  # имя папки для сохранения
+    folder_name = "_".join(obj.text.split())
+    return f"{obj.path}/search_result/{folder_name}/"  # имя папки для сохранения

@@ -11,63 +11,60 @@ class DM:
     def __init__(self, obj):
         self.folder_to_save = file_tools.get_result_folder_name(
             obj)  # полный путь
-        # список ссылок для скачивнаия
-        self.url_list = open((self.folder_to_save + 'urls_list.txt'), 'r')
-
+        with open((self.folder_to_save + "urls_list.txt"), "r") as f:
+            self.urls_list = f.readlines()
         self.text = obj.text
 
         # проверяется и создается папка
         file_tools.make_dir(self.folder_to_save)
-        print('+ твоя папка для сохранений \'{}\''.format(self.folder_to_save))
+        print(f"+ твоя папка для сохранений \'{self.folder_to_save}\'")
 
-    def one_way(self):
+    def one_way(self) -> None:
         """
         однопоточная закачка
         """
         print()
-        print('Однопоточное скачивание (для терпеливых)...')
+        print("Однопоточное скачивание (для терпеливых)...")
         success = 0
         n_string = 1
 
-        for u in self.url_list:
+        for u in self.urls_list:
             url = u.rstrip()  # удаление символа конца строки в строке файла
-            if check_tools.link_is_pic(url):
-                file_name = file_tools.get_file_name(url, n_string, text=self.text)
-                print('файл #{0} \'{1}\' сейчас скачивается'.format(
-                    n_string, file_name))
-                n_string += 1
+            file_name = file_tools.get_file_name(url,
+                                                 n_string,
+                                                 text=self.text)
+            print(f"файл #{n_string:<4} сейчас скачивается")
+            n_string += 1
 
-                try:
-                    r = requests.get(url, stream=True)
-                    if r.status_code == 200:
-                        with open(self.folder_to_save + '/' + file_name, 'bw') as f:
-                            for chunk in r.iter_content(102400):
-                                f.write(chunk)
-                        success += 1
-                        print('- OK')
-                    else:
-                        print('- не доступен')
-                except:
-                    print('- ошибка!')
-            else:
-                continue
-
-        self.all_links = n_string
+            try:
+                r = requests.get(url, stream=True)
+                if r.status_code == 200:
+                    with open(f"{self.folder_to_save}/{file_name}", "bw") as f:
+                        for chunk in r.iter_content(102400):
+                            f.write(chunk)
+                    success += 1
+                    print("- OK")
+                else:
+                    print("- не доступен")
+            except:
+                print("- ошибка!")
+        self.all_links = n_string - 1
         self.success_links = success
 
-    def multi_way(self):
+
+    def multi_way(self) -> None:
         """
         мультипоточная закачка
         :return: успешность, количество строк
         """
         print()
-        print('Многопоточное скачивание...')
+        print("Многопоточное скачивание...")
         success = 0
         n_process_start = 0
-        n_string = 0
+        n_string = 1
         dwn = []
 
-        for u in self.url_list:
+        for u in self.urls_list:
             n_string += 1
             url = u.rstrip()  # удаление символа конца строки в строке файла
             file_name = file_tools.get_file_name(
@@ -85,5 +82,5 @@ class DM:
             dwn[x].join()
             success += dwn[x].success_flag  # завершение потоков
 
-        self.all_links = n_string
+        self.all_links = n_string - 1
         self.success_links = success

@@ -2,66 +2,51 @@
 # imaging_tools.py
 # github.com/dimishpatriot/img_pars
 
-def welcome(program_data):
+line_separator = "-" * 80
+
+
+def welcome(program) -> None:
     """
     вступление
-    :param program_data: выходные данные программы
+    :param program: выходные данные программы
     """
-    print('=' * 78)
-    print('Велкам в  __{0}__, версия {1}'.format(
-        program_data.name, program_data.version))
-    print('Автор: {}'.format(program_data.author))
-    print('Хранилище: {}'.format(program_data.rep))
-    print('=' * 78)
+    print(line_separator)
+    print(f"Велкам в  __{program.name}__, версия {program.version}")
+    print(f"Автор: {program.author}")
+    print(f"Хранилище: {program.rep}")
+    print(line_separator)
 
 
-def bye_bye():
+def bye_bye() -> None:
     """
     прощальное слово
     """
-    print('Всех благ! Ты заходи, если что ^)')
-    print('=' * 78)
+    print("Всех благ! Ты заходи, если что ^)")
+    print(line_separator)
+    exit()
 
 
-def split_line():
+def cons_menu(variant_dict: dict) -> int:
     """
-    разделительная линия
-    """
-    print('-' * 78)
-
-
-def cons_menu(variant_dict, n=1):
-    '''
     выводит меню на экран и предоставляет выбор
     :param variant_dict:
     :param n: количество подвариантов в словаре
     :return:
-    '''
-    if n == 1:
-        for key in list(variant_dict.keys()):
-            if key == 0:
-                print(variant_dict[key])  # вопрос
-            else:
-                print(key, ' ', variant_dict[key])  # варианты ответа
+    """
+    for key in list(variant_dict.keys()):
+        if key == "title":
+            print(f"{variant_dict[key][0:]:^80}")  # вопрос
+        else:
+            print(f"{key:<2} {variant_dict[key][0:]}")  # варианты ответа
 
-    elif n == 2:
-        for key in list(variant_dict.keys()):
-            if key == 0:
-                print(variant_dict[key][0:])  # вопрос
-            else:
-                print(key, ' ', variant_dict[key][0:])  # варианты ответа
-
-    while True:
-        try:
-            ans = int(input('#: '))
-            if ans in variant_dict.keys() and ans != 0:
-                ans_num = ans
+    while True:  # бесконечный цикл до выбора корректного ответа
+        i = input("\n>  ")
+        if i.isdigit():
+            ans = int(i)
+            if ans == 0:
+                bye_bye()
+            if ans in variant_dict.keys() and ans != "title":
                 break
-        except:
-            pass
-
-        print('Выбирай с умом!')
-
-    split_line()  # ---
-
-    return ans_num
+        print("Выбирай с умом!")
+    print(line_separator)
+    return ans

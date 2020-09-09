@@ -7,6 +7,7 @@ from urllib.parse import quote, urlsplit, urlunsplit
 
 import requests
 from bs4 import BeautifulSoup
+from tools import check_tools
 
 
 def get_html(url, proxy, user_agent):
@@ -15,19 +16,19 @@ def get_html(url, proxy, user_agent):
     :param url: искомый урл
     :param proxy: текущий прокси
     :param user_agent: текущий useragent
-    :return: 
+    :return:
     """
     page_html = None
     try:
-        print('Пробую получить html...')
+        print("Пробую получить html...")
         page_html = requests.get(
             url=url,
             headers=user_agent,
             proxies=proxy).text  # чтение html
-        print('+ html получен!')
-        
+        print("+ html получен!")
+
     except:
-        print('- html не доступен в данный момент!')
+        print("- html не доступен в данный момент!")
 
     return page_html
 
@@ -37,7 +38,7 @@ def get_soup(html):
     варим суп
     :param html: исходный сырой html
     """
-    return BeautifulSoup(html, 'lxml')
+    return BeautifulSoup(html, "lxml")
 
 
 def transform_iri(iri):
@@ -45,40 +46,36 @@ def transform_iri(iri):
     при необходимости преобразует кириллицу в URI
     """
     parts = urlsplit(iri)
-    uri = urlunsplit((parts.scheme, parts.netloc.encode('idna').decode(
-        'ascii'), quote(parts.path), quote(parts.query, '='), quote(parts.fragment),))
-
+    uri = urlunsplit((parts.scheme,
+                      parts.netloc.encode("idna").decode("ascii"),
+                      quote(parts.path),
+                      quote(parts.query, "="),
+                      quote(parts.fragment),))
     return uri
 
 
-def clear_links(obj, links):
-    a_links = links
-    print('Найдено ({}) ссылок на изображения:'.format(len(a_links)))
+def clear_links(obj) -> list:
     urls = []
+    print("Найдены ссылки на изображения:")
+    # открытые файла на запись, имя - согласно запроса
+    with open(f"{obj.path}/search_result/{obj.text}/urls_list.txt", "w") as f:
+        for a in obj.links[:obj.quantity]:
+            addr = a.attrs["href"].split("&img_url=")[1].split("&text=")[0]
+            if "&isize=" in addr:
+                addr = addr.split("&isize=")[0]
+            if "&iorient=" in addr:
+                addr = addr.split("&iorient=")[0]
 
-    f = open(obj.path +
-             '/search_result/' +
-             '_'.join(obj.text.split(' ')) +
-             '/urls_list.txt',
-             'w')  # открытые файла на запись, имя - согласно запроса
-
-    for a in a_links[:obj.quantity]:
-        addr = a.attrs["href"].split("&img_url=")[1].split("&text=")[0]
-        if "&isize=" in addr:
-            addr = addr.split("&isize=")[0]
-        if "&iorient=" in addr:
-            addr = addr.split("&iorient=")[0]
-        url = urllib.parse.unquote_plus(addr, encoding="utf-8")
-
-        print('url: ', url)
-        urls.append(url)
-        f.write(url + '\n')
+            url = urllib.parse.unquote_plus(addr, encoding="utf-8")
+            if check_tools.link_is_pic(url):
+                urls.append(url)
+                f.write(url + "\n")
+                print("url: ", url)
 
     if len(urls) > 0:
-        print('+ Лист ссылок сформирован. Количество: ', len(urls), ' шт.')
-        print('+ Лист ссылок записан в файл > /search_result/' +
-              obj.text + '/urls_list.txt')
+        print(f"+ Лист ссылок сформирован. Количество: {len(urls)} шт.")
+        print(f"+ Лист ссылок записан в файл > /search_result/{obj.text}/urls_list.txt")
     else:
-        print('- Лист ссылок пуст!')
+        print("- Лист ссылок пуст!")
 
-    obj.urls_list = urls
+    return urls
