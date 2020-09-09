@@ -7,17 +7,10 @@ from urllib.parse import quote, urlsplit, urlunsplit
 
 import requests
 from bs4 import BeautifulSoup
-from tools import check_tools
+from tools import check_tools, imaging_tools
 
 
 def get_html(url, proxy, user_agent):
-    """
-    получение HTML
-    :param url: искомый урл
-    :param proxy: текущий прокси
-    :param user_agent: текущий useragent
-    :return:
-    """
     page_html = None
     try:
         print("Пробую получить html...")
@@ -28,24 +21,19 @@ def get_html(url, proxy, user_agent):
         print("+ html получен!")
 
     except:
-        print("- html не доступен в данный момент!")
+        print("- html не доступен в данный момент! пробуй еще")
+        imaging_tools.bye_bye()
 
     return page_html
 
 
 def get_soup(html):
-    """
-    варим суп
-    :param html: исходный сырой html
-    """
     return BeautifulSoup(html, "lxml")
 
 
 def transform_iri(iri):
-    """
-    при необходимости преобразует кириллицу в URI
-    """
     parts = urlsplit(iri)
+    # при необходимости преобразует кириллицу в URI
     uri = urlunsplit((parts.scheme,
                       parts.netloc.encode("idna").decode("ascii"),
                       quote(parts.path),
@@ -54,28 +42,21 @@ def transform_iri(iri):
     return uri
 
 
-def clear_links(obj) -> list:
+def clear_links(raw_links) -> list:
     urls = []
-    print("Найдены ссылки на изображения:")
-    # открытые файла на запись, имя - согласно запроса
-    with open(f"{obj.path}/search_result/{obj.text}/urls_list.txt", "w") as f:
-        for a in obj.links[:obj.quantity]:
+    if len(raw_links) > 0:
+        print("Найдены ссылки на изображения:")
+        for a in raw_links:
             addr = a.attrs["href"].split("&img_url=")[1].split("&text=")[0]
             if "&isize=" in addr:
                 addr = addr.split("&isize=")[0]
             if "&iorient=" in addr:
                 addr = addr.split("&iorient=")[0]
 
-            url = urllib.parse.unquote_plus(addr, encoding="utf-8")
+            url = urllib.parse.unquote_plus(addr,
+                                            encoding="utf-8")
             if check_tools.link_is_pic(url):
                 urls.append(url)
-                f.write(url + "\n")
                 print("url: ", url)
-
-    if len(urls) > 0:
-        print(f"+ Лист ссылок сформирован. Количество: {len(urls)} шт.")
-        print(f"+ Лист ссылок записан в файл > /search_result/{obj.text}/urls_list.txt")
-    else:
-        print("- Лист ссылок пуст!")
 
     return urls

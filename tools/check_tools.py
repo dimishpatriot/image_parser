@@ -3,11 +3,6 @@
 # github.com/dimishpatriot/img_pars
 
 def yes_or_no(answer: str) -> bool:
-    """
-    проверка на согласие
-    :param answer: ответ str
-    :return: True/False
-    """
     d = ("y", "Y", "yes", "Yes", "YES", "ДА", "да", "Д", "д", "Да", "1")
     if answer in d:
         return True

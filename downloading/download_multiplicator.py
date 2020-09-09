@@ -7,11 +7,7 @@ import requests
 
 
 class MD(Thread):
-    """
-    класс запуска многопоточного скачивания
-    """
-    
-    def __init__(self, url, file, folder):
+    def __init__(self, url: str, file: str, folder: str):
         Thread.__init__(self)
         self.url = url
         self.file = file
@@ -27,21 +23,21 @@ class MD(Thread):
                 # получение реквеста, если неудачно, счетчик +1 и повтор
                 r = requests.get(self.url, stream=True)
 
-                if r.status_code == 200:  # проверка запроса на код 200
-                    print(f"файл #{self.file} начал скачиваться...")
+                if r.status_code in range(200, 300):  # проверка запроса на код 200
+                    print(f"# {self.file} начал скачиваться...")
 
                     with open(self.folder + "/" + self.file, "bw") as f:
-
                         for chunk in r.iter_content(102400):
                             f.write(chunk)
-
                         self.success_flag = 1  # успешное скачивание
                     print(f"{self.file} - OK")
                     break
-
-                else:
+                elif r.status_code in range(500, 600):  # возможная ошибка сервера
                     print(self.file + " ответ сервера:",
                           r.status_code, "попытка: ", attempt)
                     attempt += 1
+                else:  # прочие ошибки
+                    print(f"{self.file} - ответ сервера: {r.status_code}")
+                    break
             except:
                 attempt += 1

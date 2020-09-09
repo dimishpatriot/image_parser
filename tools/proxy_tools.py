@@ -8,11 +8,6 @@ from tools import useragents_tools
 
 
 def proxy_update(proxy: str, main_path: str) -> None:
-    """
-    обновление листа прокси
-    :param main_path: путь главной папки
-    :param proxy: старый прокси
-    """
     print("Пробую обновить лист прокси...")
     useragent = useragents_tools.get_useragent(main_path)
 
@@ -35,23 +30,15 @@ def proxy_update(proxy: str, main_path: str) -> None:
 
 
 def get_proxy(path: str) -> dict:
-    """
-    получение прокси из proxy_list.txt
-    :return: новый прокси
-    """
+    print("Пробую сменить прокси...")
     px_list = open(path + "/lists/proxy_list.txt").read().splitlines()
     proxy = {"http": "http://" + choice(px_list)}
-    print("+ прокси успешно подменен: ", proxy)
+    print(f"+ прокси успешно подменен: {proxy}")
     proxy_update(proxy, path)
     return proxy
 
 
 def save_proxy_list(new_proxy_list: list, path: str) -> None:
-    """
-    обновление/запись proxy_list.txt
-    :param path:  путь главной папки
-    :param new_proxy_list:
-    """
     with open(path + "/lists/proxy_list.txt", "w") as f:
         for x in new_proxy_list:
             f.write(x + "\n")

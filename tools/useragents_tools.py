@@ -6,10 +6,6 @@ from random import choice
 
 
 def get_useragent(path: str) -> dict:
-    """
-    получение случайного Useragent из файла
-    :return:
-    """
     print("Выбираю подменный user-agent...")
     try:
         ua_list = open(path + "/lists/useragents_list.txt").read().split("\n")
